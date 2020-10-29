@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+    <title>新冠疫情次生灾害的可视化分析</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+    <script src="javascripts/echarts.js"></script>
+  </head>
+
+  <body>
+    <div id="StatProv">各省经济统计</div>
+    <div id="Scope">产业规模</div>
+
+    <div id="OverView">行业总览</div>
+    <div id="Analyse">行业分析</div>
+
+    <div id="Time">时间</div>
+    <div id="Trend">趋势分析</div>
+    <div id="Price">价格分布</div>
+    <div id="CPI">居民消费指数</div>
+  </body>
+
+  // Pie
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var PieChart = echarts.init(document.getElementById("StatProv"));
+
+    var data = genData(50);
+
+    option = {
+      title: {
+        text: "各省统计",
+        left: "center",
+        textStyle: {
+          color: "#ffffff",
+        },
+      },
+      tooltip: {
+        trigger: "item",
+        formatter: "{a} <br/>{b} : {c} ({d}%)",
+      },
+      legend: {
+        type: "scroll",
+        orient: "vertical",
+        right: 10,
+        top: 20,
+        bottom: 20,
+        data: data.legendData,
+        selected: data.selected,
+      },
+      series: [
+        {
+          name: "省",
+          type: "pie",
+          radius: "55%",
+          center: ["40%", "50%"],
+          data: data.seriesData,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        },
+      ],
+    };
+
+    function genData(count) {
+      var nameList = [
+        "赵",
+        "钱",
+        "孙",
+        "李",
+        "周",
+        "吴",
+        "郑",
+        "王",
+        "冯",
+        "陈",
+        "褚",
+        "卫",
+        "蒋",
+        "沈",
+        "韩",
+        "杨",
+        "朱",
+        "秦",
+        "尤",
+        "许",
+        "何",
+        "吕",
+        "施",
+        "张",
+        "孔",
+        "曹",
+        "严",
+        "华",
+        "金",
+        "魏",
+        "陶",
+        "姜",
+        "戚",
+        "谢",
+        "邹",
+        "喻",
+        "柏",
+        "水",
+        "窦",
+        "章",
+        "云",
+        "苏",
+        "潘",
+        "葛",
+        "奚",
+        "范",
+        "彭",
+        "郎",
+        "鲁",
+        "韦",
+        "昌",
+        "马",
+        "苗",
+        "凤",
+        "花",
+        "方",
+        "俞",
+        "任",
+        "袁",
+        "柳",
+        "酆",
+        "鲍",
+        "史",
+        "唐",
+        "费",
+        "廉",
+        "岑",
+        "薛",
+        "雷",
+        "贺",
+        "倪",
+        "汤",
+        "滕",
+        "殷",
+        "罗",
+        "毕",
+        "郝",
+        "邬",
+        "安",
+        "常",
+        "乐",
+        "于",
+        "时",
+        "傅",
+        "皮",
+        "卞",
+        "齐",
+        "康",
+        "伍",
+        "余",
+        "元",
+        "卜",
+        "顾",
+        "孟",
+        "平",
+        "黄",
+        "和",
+        "穆",
+        "萧",
+        "尹",
+        "姚",
+        "邵",
+        "湛",
+        "汪",
+        "祁",
+        "毛",
+        "禹",
+        "狄",
+        "米",
+        "贝",
+        "明",
+        "臧",
+        "计",
+        "伏",
+        "成",
+        "戴",
+        "谈",
+        "宋",
+        "茅",
+        "庞",
+        "熊",
+        "纪",
+        "舒",
+        "屈",
+        "项",
+        "祝",
+        "董",
+        "梁",
+        "杜",
+        "阮",
+        "蓝",
+        "闵",
+        "席",
+        "季",
+        "麻",
+        "强",
+        "贾",
+        "路",
+        "娄",
+        "危",
+      ];
+      var legendData = [];
+      var seriesData = [];
+      var selected = {};
+      for (var i = 0; i < count; i++) {
+        name =
+          Math.random() > 0.65
+            ? makeWord(4, 1) + "·" + makeWord(3, 0)
+            : makeWord(2, 1);
+        legendData.push(name);
+        seriesData.push({
+          name: name,
+          value: Math.round(Math.random() * 100000),
+        });
+        selected[name] = i < 6;
+      }
+
+      return {
+        legendData: legendData,
+        seriesData: seriesData,
+        selected: selected,
+      };
+
+      function makeWord(max, min) {
+        var nameLen = Math.ceil(Math.random() * max + min);
+        var name = [];
+        for (var i = 0; i < nameLen; i++) {
+          name.push(nameList[Math.round(Math.random() * nameList.length - 1)]);
+        }
+        return name.join("");
+      }
+    }
+    // 使用刚指定的配置项和数据显示图表。
+    PieChart.setOption(option);
+  </script>
+
+  // Bar
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var BarChart = echarts.init(document.getElementById("Scope"));
+
+    option = {
+      title: {
+        text: "感染统计",
+        textStyle: {
+          fontSize: 20,
+          color: "#ffffff",
+        },
+      },
+      grid: {
+        x: 0,
+        y: 50,
+        x2: 10,
+        y2: 0,
+        borderWidth: 1,
+        containLabel: true,
+      },
+      legend: {},
+      tooltip: {},
+      dataset: {
+        source: [
+          ["product", "2018", "2019", "2020"],
+          ["农业", 43.3, 85.8, 93.7],
+          ["工业", 83.1, 73.4, 55.1],
+          ["服务业", 86.4, 65.2, 82.5],
+          ["互联网", 72.4, 53.9, 39.1],
+        ],
+      },
+      xAxis: {
+        type: "category",
+        axisLine: {
+          lineStyle: {
+            color: "#ffffff",
+            fontSize: 10,
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+      },
+      yAxis: {
+        axisLine: {
+          lineStyle: {
+            color: "#ffffff",
+            fontSize: 10,
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+      },
+      // Declare several bar series, each will be mapped
+      // to a column of dataset.source by default.
+      series: [{ type: "bar" }, { type: "bar" }, { type: "bar" }],
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    BarChart.setOption(option);
+  </script>
+
+  // Bar
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var BarChart = echarts.init(document.getElementById("Scope"));
+
+    option = {
+      title: {
+        text: "感染统计",
+        textStyle: {
+          fontSize: 20,
+          color: "#ffffff",
+        },
+      },
+      grid: {
+        x: 0,
+        y: 50,
+        x2: 10,
+        y2: 0,
+        borderWidth: 1,
+        containLabel: true,
+      },
+      legend: {},
+      tooltip: {},
+      dataset: {
+        source: [
+          ["product", "2018", "2019", "2020"],
+          ["农业", 43.3, 85.8, 93.7],
+          ["工业", 83.1, 73.4, 55.1],
+          ["服务业", 86.4, 65.2, 82.5],
+          ["互联网", 72.4, 53.9, 39.1],
+        ],
+      },
+      xAxis: {
+        type: "category",
+        axisLine: {
+          lineStyle: {
+            color: "#ffffff",
+            fontSize: 10,
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+      },
+      yAxis: {
+        axisLine: {
+          lineStyle: {
+            color: "#ffffff",
+            fontSize: 10,
+          },
+        },
+        axisTick: {
+          show: false,
+        },
+      },
+      // Declare several bar series, each will be mapped
+      // to a column of dataset.source by default.
+      series: [{ type: "bar" }, { type: "bar" }, { type: "bar" }],
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    BarChart.setOption(option);
+  </script>
+  // 矩阵
+  <script type="text/javascript">
+    RectChart;
+    // 基于准备好的dom，初始化echarts实例
+    var RectChart = echarts.init(document.getElementById("OverView"));
+
+    option = {
+      title: {
+        text: "行业概览",
+        textStyle: {
+          fontSize: 20,
+          color: "#ffffff",
+        },
+      },
+      series: [
+        {
+          type: "treemap",
+          left: "1%",
+          right: "1%",
+          top: "5%",
+          bottom: "1%",
+          roam: false,
+          data: [
+            {
+              name: "nodeA", // First tree
+              value: 10,
+            },
+            {
+              name: "nodeB", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeC", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeD", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeE", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeF", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeG", // First tree
+              value: 10,
+            },
+            {
+              name: "nodeH", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeI", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeJ", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeK", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeL", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeM", // First tree
+              value: 10,
+            },
+            {
+              name: "nodeN", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeO", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeP", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeQ", // Second tree
+              value: 20,
+            },
+            {
+              name: "nodeR", // Second tree
+              value: 20,
+            },
+          ],
+        },
+      ],
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    RectChart.setOption(option);
+  </script>
+</html>

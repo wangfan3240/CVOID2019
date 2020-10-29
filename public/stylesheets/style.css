@@ -1,0 +1,221 @@
+body {
+  padding: 10px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-image: url("../images/bkg.png");
+  background-size:cover;
+	background-attachment: fixed;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+}
+
+div{
+  box-shadow: 0 0 0.5vw #237ad4 inset;
+  background: linear-gradient(#1359df, #1359df) left top,
+  linear-gradient(#1359df, #1359df) left top,
+  linear-gradient(#1359df, #1359df) right top,
+  linear-gradient(#1359df, #1359df) right top,
+  linear-gradient(#1359df, #1359df) left bottom,
+  linear-gradient(#1359df, #1359df) left bottom,
+  linear-gradient(#1359df, #1359df) right bottom,
+  linear-gradient(#1359df, #1359df) right bottom;
+  background-repeat: no-repeat;
+  background-size: 0.1vw 1vw, 1vw 0.1vw;
+}
+
+#Statistics{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 29%;  
+  height: 40%;  
+  color: white;
+}
+  
+#BigEvent{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 40.5%;
+  left: 0%;  
+  width: 29%;  
+  height: 55.5%;  
+  color: white;
+}
+
+#Title{
+  text-align:center;
+  font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 0%;
+  left: 29.5%;  
+  width: 49%;  
+  height: 10%;  
+  color: white;
+  }
+
+#Map{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 10.5%;
+  left: 29.5%;  
+  width: 49%;   
+  height: 60%;  
+  color: white;
+
+  }
+
+#Economy{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 71%;
+  left: 29.5%;  
+  width: 49%;   
+  height: 25%;  
+  color: white;
+
+  }
+
+#Time{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 0%;
+  left: 79%;  
+  width: 18.5%;  
+  height: 5%;  
+  color: white;
+
+ }
+
+#Goods{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 5.5%;
+  left: 79%;  
+  width: 18.5%;  
+  height: 32%;  
+  color: white;
+
+  }
+
+#RadarMap{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 38%;
+  left: 79%;  
+  width: 18.5%;  
+  height: 32.5%;  
+  color: white;
+
+}
+
+#WordCloud{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 71%;
+  left: 79%;   
+  width: 18.5%;   
+  height: 25%;  
+  color: white;
+}
+
+#Count{
+    font: 36px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: yellow;
+    opacity:1; 
+}
+
+
+#StatProv{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 29%;  
+  height: 40%;  
+  color: white;
+}
+  
+#Scope{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 40.5%;
+  left: 0%;  
+  width: 29%;  
+  height: 29.5%;  
+  color: white;
+}
+
+#OverView{
+  text-align:center;
+  font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 0%;
+  left: 29.5%;  
+  width: 49%;  
+  height: 70%;  
+  color: white;
+  }
+
+#Analyse{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 70.5%;
+  left: 0%;  
+  width: 78.5%;   
+  height: 25.5%;  
+  color: white;
+
+  }
+
+#Trend{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 5.5%;
+  left: 79%;  
+  width: 18.5%;  
+  height: 32%;  
+  color: white;
+
+  }
+
+#Price{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 38%;
+  left: 79%;  
+  width: 18.5%;  
+  height: 32%;  
+  color: white;
+
+}
+
+#CPI{
+  text-align:center;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  position: absolute;
+  top: 70.5%;
+  left: 79%;   
+  width: 18.5%;   
+  height: 25.5%;  
+  color: white;
+}
+
+#Count{
+    font: 36px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: yellow;
+    opacity:1; 
+}
