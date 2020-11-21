@@ -22,6 +22,7 @@ app.get('/Economy', function(req, res) {
   res.sendFile(__dirname + "/views/" + "Economy.html" )
 });
 
+
 // 定义模板引擎和模板文件位置
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

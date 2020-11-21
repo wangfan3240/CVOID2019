@@ -1,5 +1,4 @@
 body {
-  padding: 10px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   background-image: url("../images/bkg.png");
   background-size:cover;
@@ -10,27 +9,29 @@ body {
 }
 
 div{
-  box-shadow: 0 0 0.5vw #237ad4 inset;
-  background: linear-gradient(#1359df, #1359df) left top,
-  linear-gradient(#1359df, #1359df) left top,
-  linear-gradient(#1359df, #1359df) right top,
-  linear-gradient(#1359df, #1359df) right top,
-  linear-gradient(#1359df, #1359df) left bottom,
-  linear-gradient(#1359df, #1359df) left bottom,
-  linear-gradient(#1359df, #1359df) right bottom,
-  linear-gradient(#1359df, #1359df) right bottom;
+  box-shadow: 0 0 3px #237ad4 inset;
+  background: 
+  linear-gradient(#00CDE6, #00CDE6) left top,
+  linear-gradient(#00CDE6, #00CDE6) left top,
+  linear-gradient(#00CDE6, #00CDE6) right top,
+  linear-gradient(#00CDE6, #00CDE6) right top,
+  linear-gradient(#00CDE6, #00CDE6) left bottom,
+  linear-gradient(#00CDE6, #00CDE6) left bottom,
+  linear-gradient(#00CDE6, #00CDE6) right bottom,
+  linear-gradient(#00CDE6, #00CDE6) right bottom;
   background-repeat: no-repeat;
-  background-size: 0.1vw 1vw, 1vw 0.1vw;
+  background-size: 3px 10px, 10px 3px;
+
 }
 
 #Statistics{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 0%;
-  left: 0%;
-  width: 29%;  
-  height: 40%;  
+  top: 1vh;
+  left: 1vw;
+  width: 23vw;  
+  height: 40vh;  
   color: white;
 }
   
@@ -38,21 +39,51 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 40.5%;
-  left: 0%;  
-  width: 29%;  
-  height: 55.5%;  
+  top: 42vh;
+  left: 1vw;  
+  width: 23vw;  
+  height: 56vh;  
   color: white;
+}
+
+.title{
+  box-shadow: 0 0 0.5vw #e3e6e9;
+  padding:1px;
+  background: #042040;
+}
+
+.title:before {
+      content: '';
+      position: absolute;
+      left: 10%;
+      top: -2px;
+      bottom: auto;
+      right: auto;
+      height: 4px;
+      width: 80%;
+      background-color: #00CDE6;
+  }
+
+  .title:after {
+    content: '';
+    position: absolute;
+    left: 25%;
+    top: auto;
+    bottom: -2px;
+    right: auto;
+    height: 4px;
+    width: 50%;
+    background-color: #00CDE6;
 }
 
 #Title{
   text-align:center;
-  font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 30pt "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 0%;
-  left: 29.5%;  
-  width: 49%;  
-  height: 10%;  
+  top: 1vh;
+  left: 30vw;  
+  width: 40vw;  
+  height: 7vh;  
   color: white;
   }
 
@@ -60,10 +91,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 10.5%;
-  left: 29.5%;  
-  width: 49%;   
-  height: 60%;  
+  top: 10vh;
+  left: 25vw;  
+  width: 50vw;   
+  height: 62vh;  
   color: white;
 
   }
@@ -72,10 +103,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 71%;
-  left: 29.5%;  
-  width: 49%;   
-  height: 25%;  
+  top: 73vh;
+  left: 25vw;  
+  width: 50vw;   
+  height: 25vh;  
   color: white;
 
   }
@@ -84,10 +115,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 0%;
-  left: 79%;  
-  width: 18.5%;  
-  height: 5%;  
+  top: 1vh;
+  left: 76vw;  
+  width: 22vw;  
+  height: 5vh;  
   color: white;
 
  }
@@ -96,10 +127,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 5.5%;
-  left: 79%;  
-  width: 18.5%;  
-  height: 32%;  
+  top: 7vh;
+  left: 76vw;  
+  width: 22vw;  
+  height: 32vh;  
   color: white;
 
   }
@@ -108,10 +139,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 38%;
-  left: 79%;  
-  width: 18.5%;  
-  height: 32.5%;  
+  top: 40vh;
+  left: 76vw;  
+  width: 22vw;  
+  height: 32vh;  
   color: white;
 
 }
@@ -120,10 +151,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 71%;
-  left: 79%;   
-  width: 18.5%;   
-  height: 25%;  
+  top: 73vh;
+  left: 76vw;   
+  width: 22vw;   
+  height: 25vh;  
   color: white;
 }
 
@@ -133,15 +164,14 @@ div{
     opacity:1; 
 }
 
-
 #StatProv{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 0%;
-  left: 0%;
-  width: 29%;  
-  height: 40%;  
+  top: 1vh;
+  left: 1vw;
+  width: 23vw;  
+  height: 35vh;  
   color: white;
 }
   
@@ -149,10 +179,10 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 40.5%;
-  left: 0%;  
-  width: 29%;  
-  height: 29.5%;  
+  top: 37vh;
+  left: 1vw;  
+  width: 23vw;  
+  height: 35vh;  
   color: white;
 }
 
@@ -160,10 +190,10 @@ div{
   text-align:center;
   font: 40px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 0%;
-  left: 29.5%;  
-  width: 49%;  
-  height: 70%;  
+  top: 1vh;
+  left: 25vw;  
+  width: 50vw;  
+  height: 71vh;  
   color: white;
   }
 
@@ -171,51 +201,46 @@ div{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 70.5%;
-  left: 0%;  
-  width: 78.5%;   
-  height: 25.5%;  
+  top: 73vh;
+  left: 1vw;  
+  width: 74vw;   
+  height: 25vh;  
   color: white;
-
   }
 
-#Trend{
-  text-align:center;
-  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
-  position: absolute;
-  top: 5.5%;
-  left: 79%;  
-  width: 18.5%;  
-  height: 32%;  
-  color: white;
+  #Trend{
+    text-align:center;
+    font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+    position: absolute;
+    top: 7vh;
+    left: 76vw;  
+    width: 22vw;  
+    height: 32vh;  
+    color: white;
+  
+    }
+  
 
-  }
+    #Price{
+      text-align:center;
+      font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+      position: absolute;
+      top: 40vh;
+      left: 76vw;  
+      width: 22vw;  
+      height: 32vh;  
+      color: white;
+    
+    }
 
-#Price{
-  text-align:center;
-  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
-  position: absolute;
-  top: 38%;
-  left: 79%;  
-  width: 18.5%;  
-  height: 32%;  
-  color: white;
+    #CPI{
+      text-align:center;
+      font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+      position: absolute;
+      top: 73vh;
+      left: 76vw;   
+      width: 22vw;   
+      height: 25vh;  
+      color: white;
+    }
 
-}
-
-#CPI{
-  text-align:center;
-  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
-  position: absolute;
-  top: 70.5%;
-  left: 79%;   
-  width: 18.5%;   
-  height: 25.5%;  
-  color: white;
-}
-
-#Count{
-    font: 36px "Lucida Grande", Helvetica, Arial, sans-serif;
-    color: yellow;
-    opacity:1; 
-}
