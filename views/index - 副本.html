@@ -15,9 +15,7 @@
     <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
     <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script> 
     <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>    
-    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=nTbnbAdkvFSIiKz2IgGRjbGeRxlfuybI"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div id="Statistics">
@@ -183,181 +181,106 @@
 
   <!--地图-->
   <script type="text/javascript">
-var dom = document.getElementById("Map", 'macarons');
-var myChart = echarts.init(dom);
-option = null;
-var data = [
-     {name: '西藏自治区', value: 24}, 
-     {name: '甘肃省', value: 24},       
-     {name: '上海市', value: 25},    
-     {name: '福建省', value: 29},
-     {name: '广西壮族自治区', value: 37},     
-     {name: '广东省', value: 38},    
-     {name: '河北省', value: 39},     
-     {name: '云南省', value: 39},     
-     {name: '海南省', value: 44},     
-     {name: '辽宁省', value: 50},    
-     {name: '吉林省', value: 51},    
-     {name: '宁夏回族自治区', value: 52},     
-     {name: '江西省', value: 54},     
-     {name: '青海省', value: 57},    
-     {name: '内蒙古自治区', value: 58},
-     {name: '四川省', value: 58},     
-     {name: '黑龙江省', value: 61},     
-     {name: '重庆市', value: 66},    
-     {name: '安徽省', value: 67},    
-     {name: '贵州省', value: 71},    
-     {name: '北京市', value: 79},    
-     {name: '新疆维吾尔自治区', value: 84},     
-     {name: '浙江省', value: 84},    
-     {name: '山东省', value: 92},     
-     {name: '江苏省', value: 99},    
-     {name: '天津市', value: 105},    
-     {name: '河南省', value: 113},
-     {name: '山西省', value: 114},
-     {name: '陕西省', value: 147},
-     {name: '湖南省', value: 175},
-     {name: '湖北省', value: 273},
-     {name: '台湾省', value: 273},
-];
-var geoCoordMap = {    
-    '山东省':[117,36.65],
-    '河北省':[114.48,38.03],
-    '吉林省':[125.35,43.88],
-    '黑龙江省':[126.63,45.75],
-    '辽宁省':[123.38,41.8],
-    '内蒙古自治区':[111.65,40.82],
-    '新疆维吾尔自治区':[87.68,43.77],
-    '甘肃省':[103.73,36.03],
-    '宁夏回族自治区':[106.27,38.47],
-    '山西省':[112.53,37.87],
-    '陕西省':[108.95,34.27],
-    '河南省':[113.65,34.76],    
-    '安徽省':[117.27,31.86],
-    '江苏省':[119.78,33.04],
-    '浙江省':[120.19,30.26],
-    '福建省':[119.3,26.08],
-    '广东省':[113.23,23.16],
-    '江西省':[115.89,28.68],
-    '海南省':[110.35,20.02],
-    '广西壮族自治区':[108.33,22.84],
-    '贵州省':[106.71,26.57],
-    '湖南省':[113,28.21],
-    '湖北省':[114.31,30.52],
-    '四川省':[104.06,30.67],
-    '云南省':[102.73,25.04],
-    '西藏自治区':[91.11,29.97],    
-    '青海省':[101.74,36.56],
-    '天津市':[117.2,39.13],
-    '上海市':[121.48,31.22],
-    '重庆市':[106.54,29.59],
-    '北京市':[116.46,39.92],
-    '台湾省':[121.56,25.04], 
-};
-
-var convertData = function (data) {
-    var res = [];
-    for (var i = 0; i < data.length; i++) {
-        var geoCoord = geoCoordMap[data[i].name];
-        if (geoCoord) {
-            res.push({
-                name: data[i].name,
-                value: geoCoord.concat(data[i].value)
-            });
+  function randomValue() {
+            return Math.round(Math.random()*1000);
         }
-    }
-    return res;
-};
+  var dataList=[
+            {name:"南海诸岛",value:0},
+            {name: '北京', value: randomValue()},
+            {name: '天津', value: randomValue()},
+            {name: '上海', value: randomValue()},
+            {name: '重庆', value: randomValue()},
+            {name: '河北', value: randomValue()},
+            {name: '河南', value: randomValue()},
+            {name: '云南', value: randomValue()},
+            {name: '辽宁', value: randomValue()},
+            {name: '黑龙江', value: randomValue()},
+            {name: '湖南', value: randomValue()},
+            {name: '安徽', value: randomValue()},
+            {name: '山东', value: randomValue()},
+            {name: '新疆', value: randomValue()},
+            {name: '江苏', value: randomValue()},
+            {name: '浙江', value: randomValue()},
+            {name: '江西', value: randomValue()},
+            {name: '湖北', value: randomValue()},
+            {name: '广西', value: randomValue()},
+            {name: '甘肃', value: randomValue()},
+            {name: '山西', value: randomValue()},
+            {name: '内蒙古', value: randomValue()},
+            {name: '陕西', value: randomValue()},
+            {name: '吉林', value: randomValue()},
+            {name: '福建', value: randomValue()},
+            {name: '贵州', value: randomValue()},
+            {name: '广东', value: randomValue()},
+            {name: '青海', value: randomValue()},
+            {name: '西藏', value: randomValue()},
+            {name: '四川', value: randomValue()},
+            {name: '宁夏', value: randomValue()},
+            {name: '海南', value: randomValue()},
+            {name: '台湾', value: randomValue()},
+            {name: '香港', value: randomValue()},
+            {name: '澳门', value: randomValue()}
+        ]
 
-option = {
-    title: {
-       
-    },
-    tooltip : {
-        trigger: 'item'
-    },
-    bmap: {
-        center: [104.114129, 37.550339],
-        zoom: 5,
-        roam: true,
-        mapStyle: {
-            
-        }
-    },
-    series : [
-        {
-            name: '新冠疫情',
-            type: 'scatter',
-            coordinateSystem: 'bmap',
-            data: convertData(data),
-            symbolSize: function (val) {
-                return val[2] / 10;
+    // 基于准备好的dom，初始化echarts实例
+    var MapChart = echarts.init(document.getElementById("Map"), 'macarons');
+
+    option = {
+            tooltip: {
+                    formatter:function(params,ticket, callback){
+                        return params.seriesName+'<br />'+ params.name +'：'+ params.value
+                    }//数据格式化
+                },
+            visualMap: {
+                min: 0,
+                max: 1500,
+                left: 'left',
+                top: 'bottom',
+                text: ['高','低'],//取值范围的文字
+                inRange: {
+                    color: ['#ffffff', '#00bbBB']//取值范围的颜色
+                },
+                show:false//图注
             },
-            encode: {
-                value: 2
-            },
-            label: {
-                formatter: '{b}',
-                position: 'left',
-                show: false
-            },
-            itemStyle: {
-                color: 'yellow'
-            },
-            emphasis: {
+            geo: {
+                map: 'china',
+                roam: false,//不开启缩放和平移
+                zoom:1.23,//视角缩放比例
                 label: {
-                    show: true
-                }
-            }
-        },
-        {
-            name: '现存病例',
-            type: 'effectScatter',
-            coordinateSystem: 'bmap',
-            data: convertData(data.sort(function (a, b) {
-                return b.value - a.value;
-            }).slice(0, 36)),
-            symbolSize: function (val) {
-                return val[2] / 10;
-            },
-            encode: {
-                value: 2
-            },
-            showEffectOn: 'render',
-            rippleEffect: {
-                brushType: 'stroke'
-            },
-            hoverAnimation: true,
-            label: {
-                formatter: '{b}',
-                position: 'bottom',
-                show: true,
-                textStyle: {
-                    fontSize: 10,
-                    fontWeight: 'bolder' ,
-                    color: '#ffffff' // 主标题文字颜色
+                    normal: {
+                        show: true,
+                        fontSize:'10',
+                        color: 'rgba(0,0,0,0.7)'
+                    }
+                },
+                itemStyle: {
+                    normal:{
+                        borderColor: 'rgba(0, 0, 0, 0.2)'
                     },
+                    emphasis:{
+                        areaColor: '#F3B329',//鼠标选择区域颜色
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                        shadowBlur: 20,
+                        borderWidth: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
             },
-            itemStyle: {
-                color: '#E6805A',
-                shadowBlur: 10,
-                shadowColor: '#333',
-            },
-            
-            zlevel: 1
-        }
-    ]    
-};;
-if (option && typeof option === "object") {
-    myChart.setOption(option, true);
-
-    var map = myChart.getModel().getComponent('bmap').getBMap();
-    map.setMapStyleV2({     
-  styleId: '6c2752ae8697adc9bdcad96d74fcaaeb'
-});
-    
-}
-  
+            series : [
+                {
+                    name: '累计感染数',
+                    type: 'map',
+                    geoIndex: 0,
+                    data:dataList
+                }
+            ]
+        };
+    // 使用刚指定的配置项和数据显示图表。
+    MapChart.setOption(option);
+    MapChart.on('click', function (params) {
+            alert(params.name);
+        });
   </script>
 
   <!--雷达图-->

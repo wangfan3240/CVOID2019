@@ -244,3 +244,7 @@ div{
       color: white;
     }
 
+    /* 隐藏地图bmap左下角logo */
+    .anchorBL{
+    display:none;
+    }
