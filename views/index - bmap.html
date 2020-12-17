@@ -15,9 +15,9 @@
     <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
     <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script> 
     <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
-    <!--script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>    
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>    
     <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=nTbnbAdkvFSIiKz2IgGRjbGeRxlfuybI"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script-->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script>
   </head>
   <body>
     <div id="Statistics">
@@ -277,7 +277,8 @@ $.ajax({
 
 function generateChart(results)
 {
-    var myChart = echarts.init(document.getElementById("Map", 'macarons'));
+    var dom = document.getElementById("Map", 'macarons');
+    var myChart = echarts.init(dom);
     option = null;
 
     option = {
@@ -292,46 +293,23 @@ function generateChart(results)
         x: "left",
         trigger: 'item',
         formatter: function (params) {   //  params是数组array里每个项
-            return params.name + "<br/>累计：" + params.value[2] + "<br/>治愈：" + params.value[3] + "<br/>死亡：" + params.value[4] + "<br/>现存：" + params.value[5] + "<br/>"
+            return "累计：" + params.value[2] + "<br/>治愈：" + params.value[3] + "<br>死亡：" + params.value[4] + "<br/>现存：" + params.value[5] + "<br/>"
         }
         
     },
-    geo: {
-                map: 'china',
-                roam: false,//不开启缩放和平移
-                zoom:1.2,//视角缩放比例
-                aspectScale : 0.9,
-               // center: [115.97, 29.71],
-                label: {
-                    normal: {
-                        show: true,
-                        fontSize:'12',
-                        color: 'rgba(250,250,250,1)'
-                    }
-                },
-                itemStyle: {
-                    normal:{
-                        borderColor: 'rgba(70, 90, 100, 1)',
-                        borderWidth:2,
-                        areaColor:'rgba(64, 73, 90, 1)',                      
-                    },
-                    emphasis:{
-                        areaColor: '#A0B030',//鼠标选择区域颜色
-                        shadowOffsetX: 0,
-                        shadowOffsetY: 0,
-                        shadowBlur: 20,
-                        borderWidth: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            },
-    
+    bmap: {
+        center: [104.114129, 37.550339],
+        zoom: 5,
+        roam: true,
+        mapStyle: {
+            
+        }
+    },
     series : [       
         {
             name: '疫情统计',
             type: 'effectScatter',
-            //geoIndex: 0,
-            coordinateSystem: 'geo',
+            coordinateSystem: 'bmap',
             data: convertData(data1, results),
             symbolSize: function (val) {
                 var size =  val[5];
@@ -350,7 +328,7 @@ function generateChart(results)
             label: {
                 formatter: '{b}',
                 position: 'bottom',
-                show: false,
+                show: true,
                 textStyle: {
                     fontSize: 10,
                     fontWeight: 'bolder' ,
@@ -358,7 +336,7 @@ function generateChart(results)
                     },
             },
             itemStyle: {
-                color: 'rgba(230, 128, 90, 0.8)',                
+                color: '#E6805A',
                 shadowBlur: 10,
                 shadowColor: '#333',
             },            
@@ -367,13 +345,17 @@ function generateChart(results)
     ]    
 };;
 
-    if (option && typeof option === "object") 
-    {
-        myChart.setOption(option, true);       
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+
+        var map = myChart.getModel().getComponent('bmap').getBMap();
+        map.setMapStyleV2({     
+    styleId: '6c2752ae8697adc9bdcad96d74fcaaeb'
+    });
     }   
 
-    myChart.on("click",function (params) {
-        alert(params.name);
+    myChart.on("click",function (e) {
+     console.log(e)    //  每个标识点的信息
     })
 }
   

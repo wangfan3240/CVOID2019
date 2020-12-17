@@ -6,6 +6,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var sqlite3 = require('better-sqlite3');
+var bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -13,6 +14,10 @@ var dataRouter = require('./routes/database');
 
 // 创建实例
 var app = express();
+
+app.use(bodyParser.urlencoded({
+  extended:true
+}));
 
 // Test
 app.get('/', function (req, res) {
