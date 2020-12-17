@@ -4,11 +4,14 @@ var router = express.Router();
 // 新建一个数据库连接
 const database = require('better-sqlite3')('dbname.db');
 
-// 查询
+// 查询全国病例
 const stmt = database.prepare('SELECT * FROM CVOID ');
 var  getOverData = function() {
   return stmt.all(); 
 }
+
+// 查询各省病例
+const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Name = ? ');
 
 /* GET users listing. */
 router.get("/test", function (req, res, next) {
@@ -69,42 +72,53 @@ router.get("/Province", function (req, res, next) {
   res.json(data);
 });
 
-router.get("/Case", function (req, res, next) {
+router.get("/ProvinceCase", function (req, res, next) {
     var data = [
-     {name: '西藏自治区', value: 24}, 
-     {name: '甘肃省', value: 24},       
-     {name: '上海市', value: 25},    
-     {name: '福建省', value: 29},
-     {name: '广西壮族自治区', value: 37},     
-     {name: '广东省', value: 38},    
-     {name: '河北省', value: 39},     
-     {name: '云南省', value: 39},     
-     {name: '海南省', value: 44},     
-     {name: '辽宁省', value: 50},    
-     {name: '吉林省', value: 51},    
-     {name: '宁夏回族自治区', value: 52},     
-     {name: '江西省', value: 54},     
-     {name: '青海省', value: 57},    
-     {name: '内蒙古自治区', value: 58},
-     {name: '四川省', value: 58},     
-     {name: '黑龙江省', value: 61},     
-     {name: '重庆市', value: 66},    
-     {name: '安徽省', value: 67},    
-     {name: '贵州省', value: 71},    
-     {name: '北京市', value: 79},    
-     {name: '新疆维吾尔自治区', value: 84},     
-     {name: '浙江省', value: 84},    
-     {name: '山东省', value: 92},     
-     {name: '江苏省', value: 99},    
-     {name: '天津市', value: 105},    
-     {name: '河南省', value: 113},
-     {name: '山西省', value: 114},
-     {name: '陕西省', value: 147},
-     {name: '湖南省', value: 175},
-     {name: '湖北省', value: 273},
-     {name: '台湾省', value: 273},
+     {name: '西藏自治区', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0}, 
+     {name: '甘肃省', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0},       
+     {name: '上海市', confirmedCount: 25, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '福建省', confirmedCount: 29, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '广西壮族自治区', confirmedCount: 37, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '广东省', confirmedCount: 38, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '河北省', confirmedCount: 39, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '云南省', confirmedCount: 39, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '海南省', confirmedCount: 44, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '辽宁省', confirmedCount: 50, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '吉林省', confirmedCount: 51, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '宁夏回族自治区', confirmedCount: 52, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '江西省', confirmedCount: 54, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '青海省', confirmedCount: 57, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '内蒙古自治区', confirmedCount: 58, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '四川省', confirmedCount: 58, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '黑龙江省', confirmedCount: 61, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '重庆市', confirmedCount: 66, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '安徽省', confirmedCount: 67, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '贵州省', confirmedCount: 71, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '北京市', confirmedCount: 79, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '新疆维吾尔自治区', confirmedCount: 84, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '浙江省', confirmedCount: 84, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '山东省', confirmedCount: 92, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+     {name: '江苏省', confirmedCount: 99, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '天津市', confirmedCount: 105, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+     {name: '河南省', confirmedCount: 113, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '山西省', confirmedCount: 114, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '陕西省', confirmedCount: 147, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '湖南省', confirmedCount: 175, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '湖北省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
+     {name: '台湾省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
     ];
 
+    for(var i = 0; i < data.length; i++)
+    {
+      var resault = provinceCaseStmt.get(data[i].name);
+      if(resault)
+      {
+          data[i].confirmedCount = resault.confirmedCount;
+          data[i].curedCount = resault.curedCount;
+          data[i].deadCount = resault.deadCount;
+          data[i].currentConfirmedCount = resault.confirmedCount - resault.curedCount - resault.deadCount;
+      }      
+    }
   res.json(data);
 });
 module.exports = router;
