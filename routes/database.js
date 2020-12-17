@@ -1,19 +1,33 @@
 var express = require("express");
 var router = express.Router();
 
+// 新建一个数据库连接
+const database = require('better-sqlite3')('dbname.db');
+
+// 查询
+const stmt = database.prepare('SELECT * FROM CVOID ');
+var  getOverData = function() {
+  return stmt.all(); 
+}
+
 /* GET users listing. */
 router.get("/test", function (req, res, next) {
   var data = {
     code: 0,
     data: {
-      name: "aaa",
-      pwd: "123",
+      name: ["aaa","b","c"],
+      pwd: [123,2,3],
     },
     isSuccess: true,
     msg: "请求成功",
   };
 
   res.json(data);
+});
+
+router.get("/GetOverView", function (req, res, next) {
+  var resault = getOverData();  
+  res.json(resault);
 });
 
 router.get("/Province", function (req, res, next) {

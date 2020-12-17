@@ -95,90 +95,118 @@
 
   <!--疫情统计-->
   <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var StatChart = echarts.init(document.getElementById("Statistics"), 'macarons');
+    $.ajax({
+        type: "get",
+        async: true,            
+        url: "/database/GetOverView",   
+        dataType: "json",       
+        success: function (results) {            
+            CreateStatChart(results);
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
 
-    // 指定图表的配置项和数据
-    var option = {
-      title: {
-        text: "感染统计(万)",
-        textStyle: {
-          fontSize: 20, 
-        },
-      },
-      grid:{
-        x:0,
-        y:50,
-        x2:10,
-        y2:0,
-        borderWidth:1,
-        containLabel:true
-      },
-      tooltip: {},
-      legend: {
-        data: ["累计感染数量"],
-        textStyle: {
-        },
-      },
-      xAxis: {
-          data: [
-          "1月",
-          "2月",
-          "3月",
-          "4月",
-          "5月",
-          "6月",
-          "7月",
-          "8月",
-          "9月",
-          "10月",
-          "11月",
-          "12月",
-        ],
-        axisLine: {
-          lineStyle: {           
-            fontSize : 10,
-          },
-        },
-        axisTick: {
-         show: false
-        },
-      },
-      yAxis: {
-        axisLine: {
-          lineStyle: {
-            fontSize : 10,
-          },
-        },
-
-        axisTick: {
-         show: false
-        },
-      },
-      series: [
+    var GetOverData = function(data, type)
+    {
+        var res = [];
+        if(type == 0)
         {
-          name: "累计感染数量",
-          type: "line",
-          data: [
-            0.5,
-            2.5,
-            3,
-            8,
-            8.1,
-            8.2,
-            8.5,
-            8.6,
-            8.6,
-            9,
-            9,
-            10,
-          ],           
-        },
-        ],           
-    };
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].updateTime;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        else if(type == 1)
+        {
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].currentConfirmedCount;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        else if(type == 2)
+        {
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].confirmedCount;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        return res;
+    }
 
-    // 使用刚指定的配置项和数据显示图表。
-    StatChart.setOption(option);
+    function CreateStatChart(results)
+    {
+        var StatChart = echarts.init(document.getElementById("Statistics"), 'macarons');
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: "感染统计(万)",
+                textStyle: {
+                fontSize: 20, 
+                },
+                },
+            grid:{
+                x:0,
+                y:100,
+                x2:10,
+                y2:0,
+                borderWidth:1,
+                containLabel:true
+            },
+            tooltip: {},
+            legend: {
+                data: ['新增感染数量', '累计感染数量'],
+                textStyle: {
+                },                
+            },
+            xAxis: {
+                data: GetOverData(results, 0),
+                axisLine: {
+                    lineStyle: {           
+                    fontSize : 10,
+                    },
+                },
+                axisTick: {
+                    show: false
+                    },
+            },
+            yAxis: {
+                axisLine: {
+                    lineStyle: {
+                    fontSize : 10,
+                    },
+                },
+
+                axisTick: {
+                    show: false
+                },
+            },
+            series: [
+                {
+                name: "新增感染数量",
+                type: "line",
+                data: GetOverData(results, 1),        
+                },
+                {
+                name: "累计感染数量",
+                type: "line",
+                data: GetOverData(results, 2),         
+                },
+            ],  
+                      
+            };
+
+        StatChart.setOption(option);
+    }
   </script>
 
   <!--地图-->
@@ -201,7 +229,6 @@ var convertData = function (data, geo)
 };
 
 var data1;
-
 
 $.ajax({
         type: "get",
