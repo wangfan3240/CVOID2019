@@ -166,8 +166,29 @@
             }
         })
 
+    // 请求词云数据
+    function LoadWordCloud(date)
+    {
+        $.ajax({
+            type: 'POST',
+            async: true,            
+            url: "/database/GetWordCloud",
+            data: {'Date':date},
+            dataType: "json",       
+            success: function (results) {            
+                CreateWordCloud(results);
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("请求词云数据失败!");
+                myChart.hideLoading();
+                }
+            })
+    }
+
     LoadData(g_Province, g_Month);
-    
+
+    LoadWordCloud('2020/2/12');    
 
     // 解析全国统计数据
     var ConvertOverCase = function(data, type)
@@ -425,9 +446,17 @@
             myChart.setOption(option, true);       
         }   
 
-        myChart.on("click",function (params) {
+        myChart.on("mouseover",function (params) {
             LoadData(params.name, g_Month);
         })
+
+        myChart.on("mouseout",function (params) {
+            LoadData('中国', g_Month);
+        })
+        
+        myChart.on("click",function (params) {
+            LoadData(params.name, g_Month);
+        })        
     }
 
     // 创建雷达图
@@ -487,146 +516,12 @@
     RadarChart.setOption(option);
     }
     
-  </script>
- 
-  <!--词云-->
-  <script>
-      onload = function () {
-            var data = {
-                value: [{
-                    "name": "武汉加油",
-                    "value": 1446
-                },
-                    {
-                        "name": "疫苗",
-                        "value": 928
-                    },
-                    {
-                        "name": "口罩",
-                        "value": 906
-                    },
-                    {
-                        "name": "消毒水",
-                        "value": 825
-                    },
-                    {
-                        "name": "猪肉",
-                        "value": 514
-                    },
-                    {
-                        "name": "封城",
-                        "value": 486
-                    },
-                    {
-                        "name": "英雄",
-                        "value": 53
-                    },
-                    
-                    {
-                        "name": "死亡率",
-                        "value": 104
-                    },
-                    {
-                        "name": "本地周边游",
-                        "value": 3
-                    },
-                    {
-                        "name": "社区感染",
-                        "value": 1331
-                    },
-                    {
-                        "name": "开学",
-                        "value": 941
-                    },
-                    {
-                        "name": "意大利",
-                        "value": 585
-                    },
-                    {
-                        "name": "双黄莲",
-                        "value": 473
-                    },
-                    {
-                        "name": "雷神山",
-                        "value": 358
-                    },
-                    {
-                        "name": "留学",
-                        "value": 246
-                    },
-                    {
-                        "name": "出国",
-                        "value": 207
-                    },
-                    {
-                        "name": "工资",
-                        "value": 194
-                    },
-                    {
-                        "name": "技能培训",
-                        "value": 104
-                    },
-                   
-                    {
-                        "name": "复工复产",
-                        "value": 30
-                    },
-                    {
-                        "name": "典当",
-                        "value": 7
-                    },
-                    {
-                        "name": "海外置业",
-                        "value": 1
-                    },
-                    {
-                        "name": "武汉加油",
-                        "value": 1309
-                    },
-                    {
-                        "name": "涨价",
-                        "value": 965
-                    },
-                    {
-                        "name": "水果",
-                        "value": 900
-                    },
-                    {
-                        "name": "汽车车型",
-                        "value": 727
-                    },
-                    {
-                        "name": "购车阶段",
-                        "value": 461
-                    },
-                    {
-                        "name": "算命",
-                        "value": 303
-                    },
-                    {
-                        "name": "解梦",
-                        "value": 196
-                    },
-                    {
-                        "name": "风水",
-                        "value": 93
-                    },
-                    {
-                        "name": "面相分析",
-                        "value": 47
-                    },
-                    {
-                        "name": "手相",
-                        "value": 32
-                    },
-                    {
-                        "name": "公益",
-                        "value": 90
-                    }
-                ],
-            }
-            
-            var myChart = echarts.init(document.getElementById('WordCloud'), 'macarons');
+    // 创建柱状物资图
+
+    // 创建词云
+    function CreateWordCloud(results)
+    {
+        var myChart = echarts.init(document.getElementById('WordCloud'), 'macarons');
             //温馨提示：image 选取有严格要求不可过大；，否则firefox不兼容  iconfont上面的图标可以
             var maskImage = new Image();
             maskImage.src = 'world.png';
@@ -640,15 +535,15 @@
                     series: [{
                         type: 'wordCloud',
                         gridSize: 10,
-                        sizeRange: [5, 100],
-                        rotationRange: [-45, 0, 45, 90],
+                        sizeRange: [10, 100],
+                        rotationRange: [0, 0, 45, 90],
                         shape: 'circle',
                         maskImage: maskImage,
                         textStyle: {
                             normal: {
                                 color: function() {
                                     return 'rgb(' +
-                                            Math.round(Math.random() * 255) +
+                                            Math.round(Math.random() * 255 + 220) +
                                             ', ' + Math.round(Math.random() * 255) +
                                             ', ' + Math.round(Math.random() * 255) + ')'
                                 }
@@ -663,11 +558,12 @@
                         // width: 300,
                         // height: 200,
                         // top: 20,
-                        data: data.value
+                        data: results
                     }]
                 })
             } 
-        }
+    }
+
   </script>
 
   <!--柱状图-->
