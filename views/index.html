@@ -8,12 +8,11 @@
     <script src="javascripts/echarts-wordcloud.min.js"></script>    
     <script src="javascripts/theme/macarons.js"></script>
     <script src="javascripts/china.js"></script>
+
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
+
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> 
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
-    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
-    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script> 
     <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
     <!--script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>    
     <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=nTbnbAdkvFSIiKz2IgGRjbGeRxlfuybI"></script>
@@ -95,6 +94,31 @@
 
   <!--疫情统计-->
   <script type="text/javascript">
+    // 全局变量
+    var g_ProvinceCase;
+    var g_Month = 10;
+    var g_Province = '四川省';
+
+    function LoadData(province, date){
+        // 请求CPI数据
+        $.ajax({
+            type: 'POST',
+            async: true,            
+            url: "/database/GetCPIData",
+            data: {'Month':date, 'Province':province},
+            dataType: "json",       
+            success: function (results) {            
+                CreateRader(results);
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("GetCPI请求数据失败!");
+                myChart.hideLoading();
+                }
+            })
+    }
+
+    // 请求全国病例数据
     $.ajax({
         type: "get",
         async: true,            
@@ -110,7 +134,43 @@
         }
     })
 
-    var GetOverData = function(data, type)
+    // 请求各省病例数据
+    $.ajax({
+            type: "get",
+            async: true,            
+            url: "/database/ProvinceCase",   
+            dataType: "json",       
+            success: function (results) {            
+                g_ProvinceCase = results;
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+
+    // 请求各省位置坐标
+    $.ajax({
+            type: "get",
+            async: true,            
+            url: "/database/Province",   
+            dataType: "json",       
+            success: function (results) {            
+                CreateMap(results);
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("图表请求数据失败!");
+                myChart.hideLoading();
+            }
+        })
+
+    LoadData(g_Province, g_Month);
+    
+
+    // 解析全国统计数据
+    var ConvertOverCase = function(data, type)
     {
         var res = [];
         if(type == 0)
@@ -152,6 +212,51 @@
         return res;
     }
 
+    // 解析各省病例数据
+    var ConvertProvinceCase = function (data, geo) 
+    {
+        var res = [];
+        
+        for (var i = 0; i < data.length; i++) 
+        {
+            var geoCoord = geo[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: [geoCoord[0], geoCoord[1], data[i].confirmedCount, data[i].curedCount,data[i].deadCount,data[i].currentConfirmedCount]
+                });
+            }
+        }
+        return res;
+    };
+
+    // 解析CPI数据
+    var ConvertCPIData = function(results, year)
+    {
+        var data = [];
+        for(var i = 0; i < results.length; i++)
+        {
+            if(year == results[i][0])
+            {
+                for(var j = 1; j < results[i].length; j++)
+                {
+                    data.push(results[i][j]);
+                }
+            }
+        }
+        return data;
+    }
+
+    var GetYeasListFromCPI = function(results)
+    {
+        var data = [];
+        for(var i = 0; i < results.length; i++)
+        {
+            data.push(results[i][0]);
+        }
+        return data;
+    }
+    // 创建统计视图
     function CreateStatChart(results)
     {
         var StatChart = echarts.init(document.getElementById("Statistics"), 'macarons');
@@ -178,7 +283,7 @@
                 },                
             },
             xAxis: {
-                data: GetOverData(results, 0),
+                data: ConvertOverCase(results, 0),
                 axisLine: {
                     lineStyle: {           
                     fontSize : 10,
@@ -203,17 +308,17 @@
                 {
                 name: "现存感染数量",
                 type: "line",
-                data: GetOverData(results, 1),        
+                data: ConvertOverCase(results, 1),        
                 },
                 {
                 name: "累计感染数量",
                 type: "line",
-                data: GetOverData(results, 2),         
+                data: ConvertOverCase(results, 2),         
                 },
                 {
                 name: "死亡感染数量",
                 type: "line",
-                data: GetOverData(results, 3),         
+                data: ConvertOverCase(results, 3),         
                 },
             ],  
                       
@@ -221,202 +326,127 @@
 
         StatChart.setOption(option);
     }
-  </script>
 
-  <!--地图-->
-  <script type="text/javascript">
-
-var convertData = function (data, geo) 
-{
-    var res = [];
-    
-    for (var i = 0; i < data.length; i++) 
+    // 创建疫情地图
+    function CreateMap(results)
     {
-        var geoCoord = geo[data[i].name];
-        if (geoCoord) {
-            res.push({
-                name: data[i].name,
-                value: [geoCoord[0], geoCoord[1], data[i].confirmedCount, data[i].curedCount,data[i].deadCount,data[i].currentConfirmedCount]
-            });
-        }
-    }
-    return res;
-};
+        var myChart = echarts.init(document.getElementById("Map", 'macarons'));
+        option = null;
 
-var data1;
-
-$.ajax({
-        type: "get",
-        async: true,            
-        url: "/database/ProvinceCase",   
-        dataType: "json",       
-        success: function (results) {            
-              data1 = results;
+        option = {
+        title: {
+            x: "center",
+            text: '全国疫情现存病例',
+            textStyle: {
+                color: '#fff'
+            }
         },
-        error: function (errorMsg) {
-            //请求失败时执行该函数
-            alert("图表请求数据失败!");
-            myChart.hideLoading();
-        }
-    })
-
-$.ajax({
-        type: "get",
-        async: true,            
-        url: "/database/Province",   
-        dataType: "json",       
-        success: function (results) {            
-              generateChart(results);
+        tooltip : {
+            x: "left",
+            trigger: 'item',
+            formatter: function (params) {   //  params是数组array里每个项
+                return params.name + "<br/>累计：" + params.value[2] + "<br/>治愈：" + params.value[3] + "<br/>死亡：" + params.value[4] + "<br/>现存：" + params.value[5] + "<br/>"
+            }
+            
         },
-        error: function (errorMsg) {
-            //请求失败时执行该函数
-            alert("图表请求数据失败!");
-            myChart.hideLoading();
-        }
-    })
-
-function generateChart(results)
-{
-    var myChart = echarts.init(document.getElementById("Map", 'macarons'));
-    option = null;
-
-    option = {
-    title: {
-        x: "center",
-        text: '全国疫情现存病例',
-        textStyle: {
-            color: '#fff'
-        }
-    },
-    tooltip : {
-        x: "left",
-        trigger: 'item',
-        formatter: function (params) {   //  params是数组array里每个项
-            return params.name + "<br/>累计：" + params.value[2] + "<br/>治愈：" + params.value[3] + "<br/>死亡：" + params.value[4] + "<br/>现存：" + params.value[5] + "<br/>"
-        }
-        
-    },
-    geo: {
-                map: 'china',
-                roam: false,//不开启缩放和平移
-                zoom:1.2,//视角缩放比例
-                aspectScale : 0.9,
-               // center: [115.97, 29.71],
-                label: {
-                    normal: {
-                        show: true,
-                        fontSize:'12',
-                        color: 'rgba(250,250,250,1)'
+        geo: {
+                    map: 'china',
+                    roam: false,//不开启缩放和平移
+                    zoom:1.2,//视角缩放比例
+                    aspectScale : 0.9,
+                // center: [115.97, 29.71],
+                    label: {
+                        normal: {
+                            show: true,
+                            fontSize:'12',
+                            color: 'rgba(250,250,250,1)'
+                        }
+                    },
+                    itemStyle: {
+                        normal:{
+                            borderColor: 'rgba(70, 90, 100, 1)',
+                            borderWidth:2,
+                            areaColor:'rgba(64, 73, 90, 1)',                      
+                        },
+                        emphasis:{
+                            areaColor: '#A0B030',//鼠标选择区域颜色
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 0,
+                            shadowBlur: 20,
+                            borderWidth: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
                     }
                 },
-                itemStyle: {
-                    normal:{
-                        borderColor: 'rgba(70, 90, 100, 1)',
-                        borderWidth:2,
-                        areaColor:'rgba(64, 73, 90, 1)',                      
-                    },
-                    emphasis:{
-                        areaColor: '#A0B030',//鼠标选择区域颜色
-                        shadowOffsetX: 0,
-                        shadowOffsetY: 0,
-                        shadowBlur: 20,
-                        borderWidth: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            },
-    
-    series : [       
-        {
-            name: '疫情统计',
-            type: 'effectScatter',
-            //geoIndex: 0,
-            coordinateSystem: 'geo',
-            data: convertData(data1, results),
-            symbolSize: function (val) {
-                var size =  val[5];
-                if(size > 50)
-                size = 50;
-                return size;
-            },
-            encode: {
-                value: 2
-            },
-            showEffectOn: 'render',
-            rippleEffect: {
-                brushType: 'stroke'
-            },
-            hoverAnimation: true,
-            label: {
-                formatter: '{b}',
-                position: 'bottom',
-                show: false,
-                textStyle: {
-                    fontSize: 10,
-                    fontWeight: 'bolder' ,
-                    color: '#ffffff' // 主标题文字颜色
-                    },
-            },
-            itemStyle: {
-                color: 'rgba(230, 128, 90, 0.8)',                
-                shadowBlur: 10,
-                shadowColor: '#333',
-            },            
-            zlevel: 1
-        }
-    ]    
-};;
-
-    if (option && typeof option === "object") 
-    {
-        myChart.setOption(option, true);       
-    }   
-
-    myChart.on("click",function (params) {
-        alert(params.name);
-    })
-}
-  
-  </script>
-
-  <!--雷达图-->
-  <script type="text/javascript">
-    var g_Month = 10;
-    $.ajax({
-        type: 'POST',
-        async: true,            
-        url: "/database/GetCPIData",
-        data: {'Month':g_Month},
-        dataType: "json",       
-        success: function (results) {            
-              CreateRader(results);
-        },
-        error: function (errorMsg) {
-            //请求失败时执行该函数
-            alert("GetCPI请求数据失败!");
-            myChart.hideLoading();
-        }
-    })
-
-    var GetCPIData = function(results, year)
-    {
-        var data = [];
-        for(var i = 0; i < results.length; i++)
-        {
-            if(year == results[i][0])
+        
+        series : [       
             {
-                for(var j = 1; j < results[i].length; j++)
-                {
-                    data.push(results[i][j]);
-                }
+                name: '疫情统计',
+                type: 'effectScatter',
+                //geoIndex: 0,
+                coordinateSystem: 'geo',
+                data:ConvertProvinceCase(g_ProvinceCase, results),
+                symbolSize: function (val) {
+                    var size =  val[5];
+                    if(size > 50)
+                    size = 50;
+                    return size;
+                },
+                encode: {
+                    value: 2
+                },
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    formatter: '{b}',
+                    position: 'bottom',
+                    show: false,
+                    textStyle: {
+                        fontSize: 10,
+                        fontWeight: 'bolder' ,
+                        color: '#ffffff' // 主标题文字颜色
+                        },
+                },
+                itemStyle: {
+                    color: 'rgba(230, 128, 90, 0.8)',                
+                    shadowBlur: 10,
+                    shadowColor: '#333',
+                },            
+                zlevel: 1
             }
-        }
-        return data;
+        ]    
+    };;
+
+        if (option && typeof option === "object") 
+        {
+            myChart.setOption(option, true);       
+        }   
+
+        myChart.on("click",function (params) {
+            LoadData(params.name, g_Month);
+        })
     }
 
+    // 创建雷达图
     function CreateRader(results)
     {
         var RadarChart = echarts.init(document.getElementById("RadarMap"), 'macarons');
+
+        var YearList = GetYeasListFromCPI(results.value);
+
+        var DataList = [];
+                
+        for(var i = 0; i < YearList.length; i++)
+        {
+            var item = {
+                value:ConvertCPIData(results.value, YearList[i]),
+                name:YearList[i]
+            };
+            DataList.push(item);
+        }
 
         option = {
         title: {
@@ -424,7 +454,7 @@ function generateChart(results)
         },
         tooltip: {},
         legend: {
-            data: ['2018年','2019年', '2020年'],       
+            data: YearList,       
         },
         radar: {
             // shape: 'circle',
@@ -435,14 +465,11 @@ function generateChart(results)
                 }
             },
             indicator: [
-                { name: '衣着', max: results.max, min:results.min},
-                { name: '食品', max: results.max, min:results.min}, 
-                { name: '住房', max: results.max, min:results.min},
-                { name: '交通', max: results.max, min:results.min},
-                { name: '医疗', max: results.max, min:results.min},
-                { name: '教育', max: results.max, min:results.min},
-                { name: '生活', max: results.max, min:results.min},
-                { name: '服务', max: results.max, min:results.min},
+                { name: '衣', max: results.max, min:results.min},
+                { name: '食', max: results.max, min:results.min}, 
+                { name: '住', max: results.max, min:results.min},
+                { name: '行', max: results.max, min:results.min},
+                { name: '医疗', max: results.max, min:results.min},                
             ],
             center:['50%', '55%'],
             radius:'65%',
@@ -452,26 +479,11 @@ function generateChart(results)
             name: '生活影响',
             type: 'radar',
             // areaStyle: {normal: {}},
-            data: [
-                {
-                    value: GetCPIData(results.value, 2018),
-                    name: '2018年',
-                
-                },
-                {
-                    value: GetCPIData(results.value, 2019),
-                    name: '2019年',
-                
-                },
-                {
-                    value: GetCPIData(results.value, 2020),
-                    name: '2020年',                    
-                }
-                ]
+            data: DataList,
             }]
-        };
+        };          
 
-// 使用刚指定的配置项和数据显示图表。
+    // 使用刚指定的配置项和数据显示图表。
     RadarChart.setOption(option);
     }
     

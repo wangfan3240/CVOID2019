@@ -14,7 +14,7 @@ var  getOverData = function() {
 const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Name = ? ');
 
 // 查询CPI
-const CPIDataStmt = database.prepare('SELECT * FROM CPI Where Month = ? ');
+const CPIDataStmt = database.prepare('SELECT * FROM CPI Where Province = ? and Month = ? ');
 /* GET users listing. */
 router.get("/test", function (req, res, next) {
   var data = {
@@ -132,7 +132,7 @@ router.post("/GetCPIData", function (req, res, next){
     min:0,
     value: [ ]
   };
-  var resault = CPIDataStmt.all(req.body.Month);
+  var resault = CPIDataStmt.all(req.body.Province, req.body.Month);
   var min = 200;
   var max = 0;
   if(resault)
@@ -144,11 +144,9 @@ router.post("/GetCPIData", function (req, res, next){
       s.push(resault[i].Clothing);
       s.push(resault[i].Food);
       s.push(resault[i].Shelter);
-      s.push(resault[i].TransComm);
-      s.push(resault[i].EduEta);
-      s.push(resault[i].Health);
       s.push(resault[i].Serve);
-      s.push(resault[i].Other);
+      s.push(100);
+     
       for(var j = 1; j < s.length; j++)
       {
         if (s[j] > max)
