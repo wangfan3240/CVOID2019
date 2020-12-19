@@ -10,13 +10,7 @@
     <script src="javascripts/china.js"></script>
 
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
-
-    <!-- 新 Bootstrap4 核心 CSS 文件 -->
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> 
-    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
-    <!--script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>    
-    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=nTbnbAdkvFSIiKz2IgGRjbGeRxlfuybI"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script-->
   </head>
   <body>
     <div id="Statistics">
@@ -97,7 +91,7 @@
     // 全局变量
     var g_ProvinceCase;
     var g_Month = 10;
-    var g_Province = '四川省';
+    var g_Province = '中国';
 
     function LoadData(province, date){
         // 请求CPI数据
@@ -112,10 +106,40 @@
             },
             error: function (errorMsg) {
                 //请求失败时执行该函数
-                alert("GetCPI请求数据失败!");
-                myChart.hideLoading();
+                alert("请求民生数据失败!");
+               
                 }
             })
+
+        // 请求物资数据
+        $.ajax({
+            type: "POST",
+            async: true,            
+            url: "/database/GetProvinceData",   
+            data: {'Province':province},
+            dataType: "json",       
+            success: function (results) {            
+                CreateProvinceBar(results);
+            },
+            error: function (errorMsg) {                
+                alert("请求物资供应数据失败!");
+            }
+        })
+
+        // 请求GDP数据
+        $.ajax({
+            type: "POST",
+            async: true,            
+            url: "/database/GetProvinceGDP",   
+            data: {'Province':province},
+            dataType: "json",       
+            success: function (results) {            
+                CreateGDPChart(results);
+            },
+            error: function (errorMsg) {                
+                alert("请求GDP数据失败!");
+            }
+        })
     }
 
     // 请求全国病例数据
@@ -129,8 +153,7 @@
         },
         error: function (errorMsg) {
             //请求失败时执行该函数
-            alert("图表请求数据失败!");
-            myChart.hideLoading();
+            alert("请求全国病例数据失败!");        
         }
     })
 
@@ -143,10 +166,8 @@
             success: function (results) {            
                 g_ProvinceCase = results;
             },
-            error: function (errorMsg) {
-                //请求失败时执行该函数
-                alert("图表请求数据失败!");
-                myChart.hideLoading();
+            error: function (errorMsg) {                
+                alert("请求各省病例数据失败!");                
             }
         })
 
@@ -159,10 +180,8 @@
             success: function (results) {            
                 CreateMap(results);
             },
-            error: function (errorMsg) {
-                //请求失败时执行该函数
-                alert("图表请求数据失败!");
-                myChart.hideLoading();
+            error: function (errorMsg) {                
+                alert("请求坐标数据失败!");                
             }
         })
 
@@ -178,17 +197,18 @@
             success: function (results) {            
                 CreateWordCloud(results);
             },
-            error: function (errorMsg) {
-                //请求失败时执行该函数
-                alert("请求词云数据失败!");
-                myChart.hideLoading();
+            error: function (errorMsg) {                
+                alert("请求词云数据失败!");                
                 }
             })
     }
 
+    // 请求GDP数据
+
+    
     LoadData(g_Province, g_Month);
 
-    LoadWordCloud('2020/2/12');    
+    LoadWordCloud('2020/2/7');    
 
     // 解析全国统计数据
     var ConvertOverCase = function(data, type)
@@ -446,16 +466,19 @@
             myChart.setOption(option, true);       
         }   
 
-        myChart.on("mouseover",function (params) {
-            LoadData(params.name, g_Month);
-        })
+       // myChart.on("mouseover",function (params) {
+       //    LoadData(params.name, g_Month);
+       // })
 
-        myChart.on("mouseout",function (params) {
-            LoadData('中国', g_Month);
-        })
+       // myChart.on("mouseout",function (params) {
+       //    LoadData('中国', g_Month);
+       // })
         
         myChart.on("click",function (params) {
-            LoadData(params.name, g_Month);
+            g_Province = params.name;
+            if(g_Province=='南海诸岛')
+                g_Province = '中国';
+            LoadData(g_Province, g_Month);
         })        
     }
 
@@ -517,6 +540,110 @@
     }
     
     // 创建柱状物资图
+    function CreateProvinceBar(results)
+    {
+        var GoodsChart = echarts.init(document.getElementById("Goods"), 'macarons');
+
+        option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        legend: {
+            data: ['医疗物资', '主粮', '蔬菜', '水果', '肉类', '生活用品']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            axisLine:{
+                lineStyle:{
+
+                }
+            }
+        },
+        yAxis: {
+            type: 'category',
+            data: results.month,
+            axisLine:{
+                lineStyle:{
+
+                }
+            }
+        },
+        series: [
+            {
+                name: '医疗物资',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data:results.yl
+            },
+            {
+                name: '主粮',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: results.ls
+            },
+            {
+                name: '蔬菜',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: results.sc
+            },
+            {
+                name: '水果',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data:results.sg
+            },
+            {
+                name: '肉类',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data:results.rl
+            },
+            {
+                name: '生活用品',
+                type: 'bar',
+                stack: '总量',
+                label: {
+                    show: true,
+                    position: 'insideRight'
+                },
+                data: results.sh
+            }
+        ]
+        };
+
+// 使用刚指定的配置项和数据显示图表。
+GoodsChart.setOption(option);
+    }
 
     // 创建词云
     function CreateWordCloud(results)
@@ -564,185 +691,77 @@
             } 
     }
 
-  </script>
+    // 创建GDP
+    function CreateGDPChart(results)
+    {
+        var EconomyChart = echarts.init(document.getElementById("Economy"), 'macarons');
 
-  <!--柱状图-->
-  <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var GoodsChart = echarts.init(document.getElementById("Goods"), 'macarons');
-
-    option = {
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
-    },
-    legend: {
-        data: ['医疗物资', '主粮', '蔬菜', '肉类', '生活用品']
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'value',
-        axisLine:{
-            lineStyle:{
-    
+        option = {
+        title: {
+            text: '经济增长趋势',       
+        },
+        grid:{
+            x:0,
+            y:50,
+            x2:20,
+            y2:0,
+            borderWidth:1,
+            containLabel:true
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['实际趋势', '预测趋势'],
+            textStyle:{
+        
             }
-        }
-    },
-    yAxis: {
-        type: 'category',
-        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月'],
-        axisLine:{
-            lineStyle:{
-  
-            }
-        }
-    },
-    series: [
-        {
-            name: '医疗物资',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                show: true,
-                position: 'insideRight'
+        },
+        toolbox: {
+            
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: results.month,
+            axisLine: {
+            lineStyle: {            
+                fontSize : 10,
             },
-            data: [1320, 1302, 1301, 1034, 990, 530, 320, 390, 330, 320]
-        },
-        {
-            name: '主粮',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                show: true,
-                position: 'insideRight'
             },
-            data: [120, 132, 101, 134, 90, 230, 210, 390, 330, 320]
-        },
-        {
-            name: '蔬菜',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                show: true,
-                position: 'insideRight'
+            axisTick: {
+            show: false
             },
-            data: [220, 182, 191, 234, 290, 330, 310, 390, 330, 320]
         },
-        {
-            name: '肉类',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                show: true,
-                position: 'insideRight'
+        yAxis: {
+            type: 'value',
+            axisLine: {
+            lineStyle: {
+                fontSize : 10,
             },
-            data: [150, 212, 201, 154, 190, 330, 410, 390, 330, 320]
-        },
-        {
-            name: '生活用品',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                show: true,
-                position: 'insideRight'
             },
-            data: [820, 832, 901, 934, 690, 530, 520, 390, 330, 320]
-        }
-    ]
-};
-
-    // 使用刚指定的配置项和数据显示图表。
-    GoodsChart.setOption(option);
-  </script>
-
-  <!--折线图--> 
-  <script type="text/javascript">
-    // 基于准备好的dom，初始化echarts实例
-    var EconomyChart = echarts.init(document.getElementById("Economy"), 'macarons');
-
-    option = {
-    title: {
-        text: '年度经济增长',       
-    },
-    grid:{
-        x:0,
-        y:50,
-        x2:20,
-        y2:0,
-        borderWidth:1,
-        containLabel:true
-      },
-    tooltip: {
-        trigger: 'axis'
-    },
-    legend: {
-        data: ['2018年', '2019年', '2020年'],
-        textStyle:{
-     
-        }
-    },
-    toolbox: {
-        feature: {
-            saveAsImage: {}
-        }
-    },
-    xAxis: {
-        type: 'category',
-        boundaryGap: false,
-        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月','8月', '9月','10月', '11月', '12月'],
-        axisLine: {
-          lineStyle: {            
-            fontSize : 10,
-          },
+            axisTick: {
+            show: false
+            },
         },
-        axisTick: {
-         show: false
-        },
-    },
-    yAxis: {
-        type: 'value',
-        axisLine: {
-          lineStyle: {
-            fontSize : 10,
-          },
-        },
-        axisTick: {
-         show: false
-        },
-    },
-    series: [
-        {
-            name: '2018年',
-            type: 'line',
-            stack: '总量',
-            data: [120, 132, 101, 134, 90, 230, 210],
-           
-        },
-        {
-            name: '2019年',
-            type: 'line',
-            stack: '总量',
-            data: [220, 182, 191, 234, 290, 330, 310],
-          
-        },
-        {
-            name: '2020年',
-            type: 'line',
-            stack: '总量',
-            data: [150, 232, 201, 154, 190, 330, 410],
-           
-        }
-    ]
-};
-
-    // 使用刚指定的配置项和数据显示图表。
+        series: [
+            {
+                name: '实际趋势',
+                type: 'line',
+                stack: '总量',
+                data: results.value,
+            
+            },
+            {
+                name: '预测趋势',
+                type: 'line',
+                stack: '总量',
+                data: results.value1,
+            
+            },
+        ]
+    }
     EconomyChart.setOption(option);
+}
   </script>
 </html>

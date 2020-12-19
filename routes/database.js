@@ -11,7 +11,7 @@ var  getOverData = function() {
 }
 
 // 查询各省病例
-const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Name = ? ');
+const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Province = ? ');
 
 // 查询CPI
 const CPIDataStmt = database.prepare('SELECT * FROM CPI Where Province = ? and Month = ? ');
@@ -21,6 +21,9 @@ const ProvinceDataStmt = database.prepare('SELECT * FROM ProvinceData Where Prov
 
 // 查询词云数据
 const WordCloudDataStmt = database.prepare('SELECT * FROM WordCloud Where Date = ? ');
+
+// 查询各省GDP
+const ProvinceGDPStmt = database.prepare('SELECT * FROM ProvinceGDP Where Province = ? ');
 
 /* GET users listing. */
 router.get("/test", function (req, res, next) {
@@ -175,45 +178,67 @@ router.post("/GetCPIData", function (req, res, next){
 router.post("/GetProvinceData", function (req, res, next){  
 
   var data = {
-    province:200,
+    province:req.body.Province,
+    month:[],
     ls: [ ],
     sc: [ ],
     rl: [ ],
+    sg: [ ],
     sh: [ ],
     yl: [ ],
   };
-  var resault = ProvinceDataStmt.all(req.body.Province, req.body.Year);
 
-  if(resault)
+  var month = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+
+  var resault18 = ProvinceDataStmt.all(req.body.Province, 2018);
+  var resault19 = ProvinceDataStmt.all(req.body.Province, 2019);
+  var resault20 = ProvinceDataStmt.all(req.body.Province, 2020);
+  if(resault20)
   {
-    for(var i = 0; i< resault.length; i++)
+    var size = resault20.length;
+    for(var i = 0; i< size; i++)
     {
-      var s=[];
-      s.push(resault[i].Year);
-      s.push(resault[i].Clothing);
-      s.push(resault[i].Food);
-      s.push(resault[i].Shelter);
-      s.push(resault[i].Serve);
-      s.push(100);
-     
-      for(var j = 1; j < s.length; j++)
-      {
-        if (s[j] > max)
-        {
-          max = s[j];
-        }
-        if(s[j] < min)
-        {
-          min = s[j];
-        }
-      }
-      data.value.push(s);
+        data.month.push(month[i]);
+        data.ls.push(-Math.min(200, Math.round(Math.log10((resault20[size - 1 - i].粮食 - 100) / (resault19[size - 1 - i].粮食 - 100)) * 100)));
+        data.sc.push(-Math.min(200, Math.round(Math.log10((resault20[size - 1 - i].鲜菜 - 100) / (resault19[size - 1 - i].鲜菜 - 100)) * 100)));
+        data.rl.push(-Math.min(200, Math.round(Math.log10((resault20[size - 1 - i].畜肉 - 100) / (resault19[size - 1 - i].畜肉 - 100)) * 100)));
+        data.sh.push(-Math.min(200, Math.round(Math.log10((resault20[size - 1 - i].生活用品 - 100) / (resault19[size - 1 - i].生活用品 - 100)) * 100)));
+        data.yl.push(-Math.min(200, Math.round(Math.log10((resault20[size - 1 - i].医疗 - 100) / (resault19[size - 1 - i].医疗 - 100)) * 100)));
+        data.sg.push(-Math.min(200, Math.round(Math.log10((resault20[size - 1 - i].鲜果 - 100) / (resault19[size - 1 - i].鲜果 - 100)) * 100)));
     }
   }
 
   res.json(data);  
 });
 
+router.post("/GetProvinceGDP", function (req, res, next){  
+
+  var data = {
+    province:req.body.Province,
+    month: [],
+    value: [],   
+    value1: [] 
+  };
+
+  var resault20 = ProvinceGDPStmt.all(req.body.Province);
+  if(resault20)
+  {
+    var size = resault20.length;
+    for(var i = 0; i< size; i++)
+    {
+        data.month.push(resault20[size - i - 1].Date);
+        data.value.push(resault20[size - i - 1].Value);
+        data.value1.push(resault20[size - i - 1].Value);
+    }
+
+    for(var i = 0; i < 3; i++)
+    {
+      data.value1[size - 3 + i] = data.value[size - 7 + i] * (data.value[size - 7 + i] / data.value[size - 11 + i]);
+    }
+  }
+
+  res.json(data);  
+});
 
 router.post("/GetWordCloud", function (req, res, next){  
 
