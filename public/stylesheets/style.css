@@ -23,7 +23,37 @@ div{
   background-size: 3px 10px, 10px 3px;
 
 }
+.time-change{
+  box-sizing: border-box;
+  text-align:center;
+  font-size:1.2em;
+  height:100%;
+  border-radius:4px;
+  border:1px solid #c8cccf;
+  color:#F8F8FF;
+  -moz-appearance: none;
+  display:block;
+  outline:0;
+  padding:0 1em;
+  text-decoration:none;
+  width:82%;
+  background-color: #042040;
+  margin-left:9%;
+  vertical-align:middle;
+}
 
+.table-one{
+  background-color: #042040;
+  color:#FFFFFF;
+  vertical-align:middle;
+  text-align:center;
+}
+.table-two{
+  background-color: #043040;
+  color:#FFFFFF;
+  vertical-align:middle;
+  text-align:center;
+}
 #Statistics{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -48,8 +78,9 @@ div{
 
 .title{
   box-shadow: 0 0 0.5vw #e3e6e9;
-  padding:1px;
+  margin: 2px;
   background: #042040;
+  text-align: center;
 }
 
 .title:before {
@@ -62,6 +93,7 @@ div{
       height: 4px;
       width: 80%;
       background-color: #00CDE6;
+
   }
 
   .title:after {
@@ -74,6 +106,7 @@ div{
     height: 4px;
     width: 50%;
     background-color: #00CDE6;
+
 }
 
 #Title{

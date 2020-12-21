@@ -8,69 +8,68 @@
     <script src="javascripts/echarts-wordcloud.min.js"></script>    
     <script src="javascripts/theme/macarons.js"></script>
     <script src="javascripts/china.js"></script>
-
+    <script src="javascripts/laydate.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> 
+<!--    <link rel="stylesheet" href="/public/stylesheets/layui.css">-->
   </head>
-  <body>
     <div id="Statistics">
         <br>全国感染统计</br>
       <div id="Count">91006</div>
       <div id="EChart"></div>
     </div>
-    // 大事记
     <div id="BigEvent" class="container">
-        <h3>疫情大事记-2020</h3>
+        <h3 style="margin-top:3%;color:#008acd;font-family:Arial, Verdana, sans...;font-weight:bolder;font-size:25px">疫情大事记-2020</h3>
         <table class="table">            
             <tbody>                
-              <tr class="table-primary">
+              <tr class="table-two">
                 <td>2020-11-9</td>                
                 <td>以色列将中国列入入境无需隔离的“绿色”国家</td>
               </tr>
-              <tr class="table-success">
+              <tr class="table-one">
                 <td>2020-11-8</td>                
                 <td>香港新增23例确诊病例 累计确诊5431例</td>
               </tr>
-              <tr class="table-danger">
+              <tr class="table-two">
                 <td>2020-11-7</td>                
                 <td>陕西11日新增2例境外输入确诊病例</td>
               </tr>
-              <tr class="table-info">
+              <tr class="table-one">
                 <td>2020-11-2</td>                
                 <td>福建省新型冠状病毒肺炎疫情情况</td>
               </tr>
-              <tr class="table-warning">
+              <tr class="table-two">
                 <td>2020-10-9</td>                
                 <td>内蒙古新增1例境外输入新冠肺炎确诊病例</td>
               </tr>              
               </tr>
-              <tr class="table-secondary">
+              <tr class="table-one">
                 <td>2020-10-2</td>                
                 <td>世卫组织：全球新冠肺炎确诊病例超过4910万例</td>
               </tr>
-              <tr class="table-light">
-                <td>2020-10-1</td>                
-                <td>广东省2日新增8例境外输入确诊病例</td>
-              </tr>
-              <tr class="table-dark text-dark">
-                <td>2020-9-20</td>                
-                <td>香港新增6例新冠肺炎确诊病例</td>
-              </tr>
-              <tr class="table-primary">
-                <td>2020-9-20</td>                
-                <td>习近平向波兰总统杜达致慰问电</td>
-              </tr>
-              <tr class="table-primary">
-                <td>2020-9-19</td>                
-                <td>福建新增6例境外输入无症状感染者</td>
-              </tr>
-              <tr class="table-primary">
-                <td>2020-9-18</td>                
-                <td>世卫组织：全球新冠肺炎新增242189例</td>
-              </tr>
-              <tr class="table-primary">
-                <td>2020-9-18</td>                
-                <td>​河南省新增1例境外输入无症状感染者</td>
+<!--              <tr class="table-light">-->
+<!--                <td>2020-10-1</td>                -->
+<!--                <td>广东省2日新增8例境外输入确诊病例</td>-->
+<!--              </tr>-->
+<!--              <tr class="table-dark text-dark">-->
+<!--                <td>2020-9-20</td>                -->
+<!--                <td>香港新增6例新冠肺炎确诊病例</td>-->
+<!--              </tr>-->
+<!--              <tr class="table-primary">-->
+<!--                <td>2020-9-20</td>                -->
+<!--                <td>习近平向波兰总统杜达致慰问电</td>-->
+<!--              </tr>-->
+<!--              <tr class="table-primary">-->
+<!--                <td>2020-9-19</td>                -->
+<!--                <td>福建新增6例境外输入无症状感染者</td>-->
+<!--              </tr>-->
+<!--              <tr class="table-primary">-->
+<!--                <td>2020-9-18</td>                -->
+<!--                <td>世卫组织：全球新冠肺炎新增242189例</td>-->
+<!--              </tr>-->
+<!--              <tr class="table-primary">-->
+<!--                <td>2020-9-18</td>                -->
+<!--                <td>​河南省新增1例境外输入无症状感染者</td>-->
               </tr>
             </tbody>
           </table>
@@ -80,7 +79,19 @@
     </div>
     <div id="Map">疫情地图</div>
     <div id="Economy">经济影响分析</div>
-    <div id="Time">2020年11月22日</div>
+    <div id="Time">
+      <input type="button" class="time-change" id="test1"/>
+    </div>
+    <script>
+      laydate.render({
+        elem: '#test1',
+        theme: '#393D49',
+        value: '2020-12-10',
+        showBottom: false
+        ,min: '2016-10-14'
+        ,max: '2080-10-14'
+      });
+    </script>
     <div id="Goods">物资需求与供应</div>
     <div id="RadarMap">衣食住行精神需求分析</div>
     <div id="WordCloud">情绪词云图</div>
@@ -305,20 +316,25 @@
         var option = {
             title: {
                 text: "感染统计(万)",
+                x:'center',
+                y:10,
                 textStyle: {
                 fontSize: 20, 
                 },
                 },
             grid:{
+                width:'95%',
                 x:0,
                 y:100,
                 x2:10,
                 y2:0,
+                bottom:5,
                 borderWidth:1,
                 containLabel:true
             },
             tooltip: {},
             legend: {
+                top:50,
                 data: ['现存感染数量', '累计感染数量', '死亡感染数量'],
                 textStyle: {
                 },                
@@ -377,9 +393,11 @@
         option = {
         title: {
             x: "center",
+            y:20,
             text: '全国疫情现存病例',
             textStyle: {
-                color: '#fff'
+                color: '#fff',
+                fontSize: 30,
             }
         },
         tooltip : {
@@ -502,11 +520,18 @@
 
         option = {
         title: {
-            text: '生活影响',       
+            text: '生活影响',
+          textStyle: {
+            fontSize: 23,
+          },
+          x:15,
+          y:20
         },
         tooltip: {},
         legend: {
-            data: YearList,       
+            data: YearList,
+          y:15,
+          x:"73%"
         },
         radar: {
             // shape: 'circle',
@@ -516,6 +541,7 @@
                     padding: [1, 1]
                 }
             },
+
             indicator: [
                 { name: '衣', max: results.max, min:results.min},
                 { name: '食', max: results.max, min:results.min}, 
@@ -523,7 +549,7 @@
                 { name: '行', max: results.max, min:results.min},
                 { name: '医疗', max: results.max, min:results.min},                
             ],
-            center:['50%', '55%'],
+            center:['50%', '60%'],
             radius:'65%',
         
         },
@@ -552,7 +578,8 @@
             }
         },
         legend: {
-            data: ['医疗物资', '主粮', '蔬菜', '水果', '肉类', '生活用品']
+            data: ['医疗物资', '主粮', '蔬菜', '水果', '肉类', '生活用品'],
+            y:5
         },
         grid: {
             left: '3%',
@@ -698,13 +725,19 @@ GoodsChart.setOption(option);
 
         option = {
         title: {
-            text: '经济增长趋势',       
+            text: '经济增长趋势',
+            textStyle: {
+              fontSize:23
+            },
+          y:10,
+          x:"center"
         },
         grid:{
-            x:0,
+            x:10,
             y:50,
-            x2:20,
+            x2:10,
             y2:0,
+            bottom:5,
             borderWidth:1,
             containLabel:true
         },
@@ -713,8 +746,9 @@ GoodsChart.setOption(option);
         },
         legend: {
             data: ['实际趋势', '预测趋势'],
+            y:5,
+          x:"80%",
             textStyle:{
-        
             }
         },
         toolbox: {
