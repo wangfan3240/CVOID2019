@@ -1,3 +1,4 @@
+const e = require("express");
 var express = require("express");
 var router = express.Router();
 
@@ -123,17 +124,42 @@ router.post("/ProvinceCase", function (req, res, next) {
      {name: '台湾省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
     ];
 
-    var date = req.body.Date.year + '/' + req.body.Date.month + '/' + req.body.Date.day;
+    
     for(var i = 0; i < data.length; i++)
     {
-      var resault = provinceCaseStmt.all(data[i].name, date);
+      var resault;
+      var date;
+      var month = Number(req.body.Date.month);
+      var day = Number(req.body.Date.day) + 1;
+      do{
+        if(day-- <= 0)
+        {
+          month -=1;
+          if(month <= 0)
+          {
+            break;
+          }
+          else
+          {
+            day = 31;
+            continue;
+          }         
+        }
+        else
+        {
+          date = req.body.Date.year + '/' + String(month) + '/' + String(day);
+          resault = provinceCaseStmt.all(data[i].name, date);
+        }
+
+      }while(resault.length == 0)
+
       if(resault.length)
       {
           data[i].confirmedCount = resault[0].confirmedCount;
           data[i].curedCount = resault[0].curedCount;
           data[i].deadCount = resault[0].deadCount;
           data[i].currentConfirmedCount = resault[0].confirmedCount - resault[0].curedCount - resault[0].deadCount;
-      }      
+      }
     }
   res.json(data);
 });

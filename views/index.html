@@ -10,9 +10,10 @@
     <script src="javascripts/china.js"></script>
     <script src="javascripts/laydate.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
+    <script src="https://cdn.bootcss.com/heatmap.js/2.0.2/heatmap.min.js"></script>
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> 
     <script src="javascripts/jquery.dataTables.min.js"></script>
-    
+    <link rel="stylesheet" type="text/css" href="stylesheets/laydate.css" />
   </head>
     <div id="Statistics" class = "k">
     </div>
@@ -60,7 +61,8 @@
 
     laydate.render({  
         elem: '#test1',
-        theme: '#393D49',       
+        theme: '#393D49',  
+        //theme:'molv',
         format: 'yyyy-MM-dd',  
         value: '2020-12-10',         
         showBottom: false,
@@ -76,8 +78,7 @@
             g_Date.day = date.date;
             LoadWordCloud(g_Date);
             $('#News').dataTable().fnDestroy();
-            DateChanged(g_Date);
-            
+            DateChanged(g_Date);            
         }
         });        
 
@@ -290,6 +291,23 @@
         return res;
     };
 
+    var ConvertProvinceCaseConfiremed = function (data, geo) 
+    {
+        var res = [];
+        
+        for (var i = 0; i < data.length; i++) 
+        {
+            var geoCoord = geo[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: [geoCoord[0], geoCoord[1], data[i].confirmedCount]
+                });
+            }
+        }
+        return res;
+    };
+
     // 解析CPI数据
     var ConvertCPIData = function(results, year)
     {
@@ -404,7 +422,7 @@
             y:20,
             text: '全国疫情现存病例',
             textStyle: {
-                color: '#fff',
+                color: '#008acd',
                 fontSize: 30,
             }
         },
@@ -416,6 +434,19 @@
             }
             
         },
+        visualMap: {
+                        min: 0,
+                        max: 1000,                
+                        seriesIndex: [1],
+                        orient: 'horizontal',
+                        inRange: {
+                            color: ['rgba(217, 78, 93, 0.8)','rgba(234, 199, 54, 0.8)', 'rgba(80, 163, 226, 0.7)'].reverse(),
+                            //opacity: [0.3, 0.6]
+                        },
+                        textStyle: {
+                            color: '#fff'
+                        }
+                    },
         geo: {
                     map: 'china',
                     roam: false,//不开启缩放和平移
@@ -446,17 +477,24 @@
                     }
                 },
         
-        series : [       
+        series : [                       
             {
                 name: '疫情统计',
                 type: 'effectScatter',
-                //geoIndex: 0,
                 coordinateSystem: 'geo',
                 data:ConvertProvinceCase(results, g_ProvinceGeo),
                 symbolSize: function (val) {
-                    var size =  val[5]/10;
-                    if(size > 50)
-                    size = 50;
+                    var size =  val[5];
+                    if(size>0)
+                    {
+                        if(size < 10)
+                        {
+                            size = 10;
+                        }
+                    }
+                    if(size > 20)
+                        size = 20;
+                        
                     return size;
                 },
                 encode: {
@@ -476,14 +514,19 @@
                         fontWeight: 'bolder' ,
                         color: '#ffffff' // 主标题文字颜色
                         },
-                },
+                },    
                 itemStyle: {
-                    color: 'rgba(230, 128, 90, 0.8)',                
+                    color: 'rgba(230, 0, 0, 0.5)',                
                     shadowBlur: 10,
                     shadowColor: '#333',
                 },            
-                zlevel: 1
-            }
+                      
+                zlevel: 2
+            },{
+                type: 'heatmap',
+                coordinateSystem: 'geo',           
+                data:ConvertProvinceCaseConfiremed(results, g_ProvinceGeo),
+            },
         ]    
     };;
 

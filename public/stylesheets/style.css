@@ -30,19 +30,17 @@ div.k{
   font-size:1.2em;
   height:100%;
   border-radius:4px;
-  border:1px solid #c8cccf;
+  border:1px solid #c8cbcf;
   color:#F8F8FF;
   -moz-appearance: none;
   display:block;
   outline:0;
   padding:0 1em;
   text-decoration:none;
-  width:82%;
+  width:90%;
   background-color: #042040;
-  margin-left:9%;
-  vertical-align:middle;
+  margin-left:5%;
 }
-
 .table-one{
   background-color: #042040;
   color:#FFFFFF;
@@ -55,6 +53,7 @@ div.k{
   vertical-align:middle;
   text-align:center;
 }
+
 #Statistics{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -80,13 +79,14 @@ div.k{
 
 #EventTitle{
   text-align:center;
-  font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-weight:bold;
   color:#008acd;
   padding: 10px 8px;
 }
 
 .title{
-  box-shadow: 0 0 0.5vw #e3e6e9;
+  box-shadow: 0 0 0.5vw #03e6e9;
   margin: 2px;
   background: #042040;
   text-align: center;
@@ -161,8 +161,6 @@ div.k{
   left: 76vw;  
   width: 22vw;  
   height: 5vh;  
-  color: white;
-
  }
 
 #Goods{
