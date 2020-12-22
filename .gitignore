@@ -1,2 +1,9 @@
 node_modules
-database
+data
+keywrodsprocess/date_title_dic.npy
+keywrodsprocess/date_summary_dic.npy
+keywrodsprocess/datas.npy
+keywrodsprocess/WordCloud.csv
+keywrodsprocess/News.csv
+database/dbname.db
+keywrodsprocess/DXYNews.csv

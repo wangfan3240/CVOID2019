@@ -5,7 +5,7 @@ import numpy as np
 import jieba
 import jieba.analyse
 datas = []
-with open('News.csv','r') as f:
+with open("DXYNews.csv",'r',encoding='utf-8') as f:
     reader = csv.DictReader(f)
     for row in reader:
         date = re.search(r'(\d{4}/\d{1,2}/\d{1,2})',row['pubDate'])

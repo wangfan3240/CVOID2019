@@ -13,8 +13,7 @@ with open('date_sumary_keywords.txt','w+') as f:
 		print(date)
 		keywords = jieba.analyse.extract_tags(summary, topK=20, withWeight=True, allowPOS=('n', 'nr', 'ns'))
 		for item in keywords:
-			data = data + str(item[0]) + ',' + str(item[1]) + ','
-		data = date + ',' + data[:-1] + '\n'
+			data = data + date + ',' + str(item[0]) + ',' + str(item[1]) + '\n'
 		f.write(data)
 		data = ''
 # print(data_keywords_dic)
