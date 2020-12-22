@@ -11,117 +11,102 @@
     <script src="javascripts/laydate.js"></script>
     <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> 
-<!--    <link rel="stylesheet" href="/public/stylesheets/layui.css">-->
+    <script src="javascripts/jquery.dataTables.min.js"></script>
+    
   </head>
-    <div id="Statistics">
-        <br>全国感染统计</br>
-      <div id="Count">91006</div>
-      <div id="EChart"></div>
+    <div id="Statistics" class = "k">
     </div>
-    <div id="BigEvent" class="container">
-        <h3 style="margin-top:3%;color:#008acd;font-family:Arial, Verdana, sans...;font-weight:bolder;font-size:25px">疫情大事记-2020</h3>
-        <table class="table">            
-            <tbody>                
-              <tr class="table-two">
-                <td>2020-11-9</td>                
-                <td>以色列将中国列入入境无需隔离的“绿色”国家</td>
-              </tr>
-              <tr class="table-one">
-                <td>2020-11-8</td>                
-                <td>香港新增23例确诊病例 累计确诊5431例</td>
-              </tr>
-              <tr class="table-two">
-                <td>2020-11-7</td>                
-                <td>陕西11日新增2例境外输入确诊病例</td>
-              </tr>
-              <tr class="table-one">
-                <td>2020-11-2</td>                
-                <td>福建省新型冠状病毒肺炎疫情情况</td>
-              </tr>
-              <tr class="table-two">
-                <td>2020-10-9</td>                
-                <td>内蒙古新增1例境外输入新冠肺炎确诊病例</td>
-              </tr>              
-              </tr>
-              <tr class="table-one">
-                <td>2020-10-2</td>                
-                <td>世卫组织：全球新冠肺炎确诊病例超过4910万例</td>
-              </tr>
-<!--              <tr class="table-light">-->
-<!--                <td>2020-10-1</td>                -->
-<!--                <td>广东省2日新增8例境外输入确诊病例</td>-->
-<!--              </tr>-->
-<!--              <tr class="table-dark text-dark">-->
-<!--                <td>2020-9-20</td>                -->
-<!--                <td>香港新增6例新冠肺炎确诊病例</td>-->
-<!--              </tr>-->
-<!--              <tr class="table-primary">-->
-<!--                <td>2020-9-20</td>                -->
-<!--                <td>习近平向波兰总统杜达致慰问电</td>-->
-<!--              </tr>-->
-<!--              <tr class="table-primary">-->
-<!--                <td>2020-9-19</td>                -->
-<!--                <td>福建新增6例境外输入无症状感染者</td>-->
-<!--              </tr>-->
-<!--              <tr class="table-primary">-->
-<!--                <td>2020-9-18</td>                -->
-<!--                <td>世卫组织：全球新冠肺炎新增242189例</td>-->
-<!--              </tr>-->
-<!--              <tr class="table-primary">-->
-<!--                <td>2020-9-18</td>                -->
-<!--                <td>​河南省新增1例境外输入无症状感染者</td>-->
-              </tr>
-            </tbody>
-          </table>
+    <div id="BigEvent" class = "k">
+        <div id="EventTitle">疫情大事记-2020</div>
+        <table id="News">   
+                     
+        </table>
     </div>
 
     <div id="Title" class="title">新冠疫情次生灾害的可视化分析</div>
-    </div>
-    <div id="Map">疫情地图</div>
-    <div id="Economy">经济影响分析</div>
-    <div id="Time">
+    </h1>
+    <div id="Map" class = "k">疫情地图</div>
+    <div id="Economy" class = "k">经济影响分析</div>
+    <div id="Time" >
       <input type="button" class="time-change" id="test1"/>
     </div>
-    <script>
-      laydate.render({
-        elem: '#test1',
-        theme: '#393D49',
-        value: '2020-12-10',
-        showBottom: false
-        ,min: '2016-10-14'
-        ,max: '2080-10-14'
-      });
-    </script>
-    <div id="Goods">物资需求与供应</div>
-    <div id="RadarMap">衣食住行精神需求分析</div>
-    <div id="WordCloud">情绪词云图</div>
+    <div id="Goods" class = "k">物资需求与供应</div>
+    <div id="RadarMap" class = "k">衣食住行精神需求分析</div>
+    <div id="WordCloud" class = "k">情绪词云图</div>
   </body>
 
   <!--疫情统计-->
   <script type="text/javascript">
-    // 全局变量
-    var g_ProvinceCase;
-    var g_Month = 10;
-    var g_Province = '中国';
 
-    function LoadData(province, date){
-        // 请求CPI数据
-        $.ajax({
-            type: 'POST',
+    // 全局变量
+    var g_ProvinceGeo;
+    var g_Province = '中国';
+    var g_Date = {year:2020, month:11, day:30 };
+
+
+    // 请求各省位置坐标
+    $.ajax({
+            type: "get",
             async: true,            
-            url: "/database/GetCPIData",
-            data: {'Month':date, 'Province':province},
+            url: "/database/Province",   
             dataType: "json",       
             success: function (results) {            
-                CreateRader(results);
+                g_ProvinceGeo = results;
             },
-            error: function (errorMsg) {
-                //请求失败时执行该函数
-                alert("请求民生数据失败!");
-               
-                }
-            })
+            error: function (errorMsg) {                
+                alert("请求坐标数据失败!");                
+            }
+        })
 
+    laydate.render({  
+        elem: '#test1',
+        theme: '#393D49',       
+        format: 'yyyy-MM-dd',  
+        value: '2020-12-10',         
+        showBottom: false,
+        min: '2020-1-20',
+        max: '2020-12-10',
+        done:function(value, date, endDate)
+        {
+            if(g_Date.month != date.month)
+            {
+                g_Date.month = date.month;
+                MonthChanged(g_Date.month);
+            }
+            g_Date.day = date.date;
+            LoadWordCloud(g_Date);
+            $('#News').dataTable().fnDestroy();
+            DateChanged(g_Date);
+            
+        }
+        });        
+
+    function LoadNewInfo(data)
+    {
+        $(document).ready(function() {
+            
+            $('#News').dataTable( {
+                bLengthChange: false,
+                paging: true,//分页
+                ordering: true,//是否启用排序
+                searching: false,//搜索   
+                bAutoWidth: true, //自适应宽度
+                bPaginate: false,
+                bInfo: false, 
+            "data": data,
+            "columns": [                
+                { "title": "" },                
+                ],
+                createdRow: function ( row, data, index ) {
+                    $('td', row).css('font-weight',"normal").css("color","#ffffff");
+                    $('td', row).css('font-weight',"normal").css("background","rgba(255,255,255,0.1)");
+                },
+            });
+        }); 
+    };
+
+    function ProvinceChanged(province)
+    {
         // 请求物资数据
         $.ajax({
             type: "POST",
@@ -153,6 +138,58 @@
         })
     }
 
+    function DateChanged(date)
+    {                 
+        // 请求各省病例数据
+        $.ajax({
+            type: "POST",
+            async: true,            
+            url: "/database/ProvinceCase",   
+            data: {'Date':date},
+            dataType: "json",       
+            success: function (results) {            
+                CreateMap(results);
+            },
+            error: function (errorMsg) {                
+                alert("请求各省病例数据失败!");                
+            }
+        })
+        // 请求新闻信息
+        $.ajax({
+            type: "POST",
+            async: true,            
+            url: "/database/GetNews",   
+            data: {'Date':date},
+            dataType: "json",       
+            success: function (results) {            
+                LoadNewInfo(results);
+            },
+            error: function (errorMsg) {                
+                alert("请求新闻数据失败!");                
+            }
+        })
+    }
+
+    function MonthChanged(month)
+    {
+        // 请求CPI数据
+          $.ajax({
+            type: 'POST',
+            async: true,            
+            url: "/database/GetCPIData",
+            data: {'Month':month, 'Province':g_Province},
+            dataType: "json",       
+            success: function (results) {            
+                CreateRader(results);
+            },
+            error: function (errorMsg) {
+                //请求失败时执行该函数
+                alert("请求民生数据失败!");
+               
+                }
+            })
+    }
+
     // 请求全国病例数据
     $.ajax({
         type: "get",
@@ -167,34 +204,6 @@
             alert("请求全国病例数据失败!");        
         }
     })
-
-    // 请求各省病例数据
-    $.ajax({
-            type: "get",
-            async: true,            
-            url: "/database/ProvinceCase",   
-            dataType: "json",       
-            success: function (results) {            
-                g_ProvinceCase = results;
-            },
-            error: function (errorMsg) {                
-                alert("请求各省病例数据失败!");                
-            }
-        })
-
-    // 请求各省位置坐标
-    $.ajax({
-            type: "get",
-            async: true,            
-            url: "/database/Province",   
-            dataType: "json",       
-            success: function (results) {            
-                CreateMap(results);
-            },
-            error: function (errorMsg) {                
-                alert("请求坐标数据失败!");                
-            }
-        })
 
     // 请求词云数据
     function LoadWordCloud(date)
@@ -213,13 +222,12 @@
                 }
             })
     }
+   
+    MonthChanged(g_Date.month);
+    ProvinceChanged(g_Province);
+    DateChanged(g_Date);
 
-    // 请求GDP数据
-
-    
-    LoadData(g_Province, g_Month);
-
-    LoadWordCloud('2020/2/7');    
+    LoadWordCloud(g_Date);    
 
     // 解析全国统计数据
     var ConvertOverCase = function(data, type)
@@ -237,7 +245,7 @@
         else if(type == 1)
         {
             for (var i = data.length-1; i >= 0; i--) {
-            var r = data[i].currentConfirmedCount;
+            var r = data[i].currentConfirmedCount / 10000;
             if (r) {
                 res.push(r);
                 }
@@ -246,7 +254,7 @@
         else if(type == 2)
         {
             for (var i = data.length-1; i >= 0; i--) {
-            var r = data[i].confirmedCount;
+            var r = data[i].confirmedCount / 10000;
             if (r) {
                 res.push(r);
                 }
@@ -255,7 +263,7 @@
         else if(type == 3)
         {
             for (var i = data.length-1; i >= 0; i--) {
-            var r = data[i].deadCount;
+            var r = data[i].deadCount / 10000;
             if (r) {
                 res.push(r);
                 }
@@ -323,10 +331,10 @@
                 },
                 },
             grid:{
-                width:'95%',
-                x:0,
+                width:'90%',
+                x:'3.5%',
                 y:100,
-                x2:10,
+                x2:0,
                 y2:0,
                 bottom:5,
                 borderWidth:1,
@@ -444,9 +452,9 @@
                 type: 'effectScatter',
                 //geoIndex: 0,
                 coordinateSystem: 'geo',
-                data:ConvertProvinceCase(g_ProvinceCase, results),
+                data:ConvertProvinceCase(results, g_ProvinceGeo),
                 symbolSize: function (val) {
-                    var size =  val[5];
+                    var size =  val[5]/10;
                     if(size > 50)
                     size = 50;
                     return size;
@@ -496,7 +504,8 @@
             g_Province = params.name;
             if(g_Province=='南海诸岛')
                 g_Province = '中国';
-            LoadData(g_Province, g_Month);
+            ProvinceChanged(g_Province);
+            MonthChanged(g_Date.month);
         })        
     }
 

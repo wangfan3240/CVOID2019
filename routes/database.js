@@ -11,10 +11,10 @@ var  getOverData = function() {
 }
 
 // 查询各省病例
-const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Province = ? ');
+const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Province = ? and updateTime = ?');
 
 // 查询CPI
-const CPIDataStmt = database.prepare('SELECT * FROM CPI Where Province = ? and Month = ? ');
+const CPIDataStmt = database.prepare('SELECT * FROM ProvinceData Where Province = ? and Month = ? ');
 
 // 查询各省物资供应数据
 const ProvinceDataStmt = database.prepare('SELECT * FROM ProvinceData Where Province = ? and Year = ? ');
@@ -24,6 +24,9 @@ const WordCloudDataStmt = database.prepare('SELECT * FROM WordCloud Where Date =
 
 // 查询各省GDP
 const ProvinceGDPStmt = database.prepare('SELECT * FROM ProvinceGDP Where Province = ? ');
+
+// 查询新闻
+const NewsStmt = database.prepare('SELECT * FROM News Where Date = ? ');
 
 /* GET users listing. */
 router.get("/test", function (req, res, next) {
@@ -84,7 +87,7 @@ router.get("/Province", function (req, res, next) {
   res.json(data);
 });
 
-router.get("/ProvinceCase", function (req, res, next) {
+router.post("/ProvinceCase", function (req, res, next) {
     var data = [
      {name: '西藏自治区', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0}, 
      {name: '甘肃省', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0},       
@@ -120,15 +123,16 @@ router.get("/ProvinceCase", function (req, res, next) {
      {name: '台湾省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
     ];
 
+    var date = req.body.Date.year + '/' + req.body.Date.month + '/' + req.body.Date.day;
     for(var i = 0; i < data.length; i++)
     {
-      var resault = provinceCaseStmt.get(data[i].name);
-      if(resault)
+      var resault = provinceCaseStmt.all(data[i].name, date);
+      if(resault.length)
       {
-          data[i].confirmedCount = resault.confirmedCount;
-          data[i].curedCount = resault.curedCount;
-          data[i].deadCount = resault.deadCount;
-          data[i].currentConfirmedCount = resault.confirmedCount - resault.curedCount - resault.deadCount;
+          data[i].confirmedCount = resault[0].confirmedCount;
+          data[i].curedCount = resault[0].curedCount;
+          data[i].deadCount = resault[0].deadCount;
+          data[i].currentConfirmedCount = resault[0].confirmedCount - resault[0].curedCount - resault[0].deadCount;
       }      
     }
   res.json(data);
@@ -150,11 +154,11 @@ router.post("/GetCPIData", function (req, res, next){
     {
       var s=[];
       s.push(resault[i].Year);
-      s.push(resault[i].Clothing);
-      s.push(resault[i].Food);
-      s.push(resault[i].Shelter);
-      s.push(resault[i].Serve);
-      s.push(100);
+      s.push(resault[i].衣着);
+      s.push(resault[i].食品烟酒);
+      s.push(resault[i].居住);
+      s.push(resault[i].交通和通信);
+      s.push(resault[i].医疗);
      
       for(var j = 1; j < s.length; j++)
       {
@@ -170,7 +174,7 @@ router.post("/GetCPIData", function (req, res, next){
       data.value.push(s);
     }
   }
-  data.min = min;
+  data.min = 90;
   data.max = max;
   res.json(data);  
 });
@@ -242,8 +246,27 @@ router.post("/GetProvinceGDP", function (req, res, next){
 
 router.post("/GetWordCloud", function (req, res, next){  
 
-  var resault = WordCloudDataStmt.all(req.body.Date); 
+  var Date = req.body.Date.year + '/' + req.body.Date.month + '/' + req.body.Date.day;
+  var resault = WordCloudDataStmt.all(Date); 
 
   res.json(resault);  
 });
+
+router.post("/GetNews", function (req, res, next){  
+
+  var Date = req.body.Date.month + '月' + req.body.Date.day +'日';
+  var resault = NewsStmt.all(Date); 
+
+  var data = [];
+  for(var i = 0; i < resault.length; i++)
+  {
+    var news = [];
+    //news.push(resault[i].Date);
+    //news.push(resault[i].title);
+    news.push(resault[i].Date + ':' + resault[i].title);
+    data.push(news);
+  }
+  res.json(data);  
+});
+
 module.exports = router;
