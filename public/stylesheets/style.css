@@ -59,7 +59,7 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 1vh;
-  left: 1vw;
+  left: 0.5vw;
   width: 23vw;  
   height: 40vh;  
   color: white;
@@ -70,7 +70,7 @@ div.k{
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 42vh;
-  left: 1vw;  
+  left: 0.5vw;  
   width: 23vw;  
   height: 56vh;  
   color: white;
@@ -85,11 +85,16 @@ div.k{
   padding: 10px 8px;
 }
 
+table{
+  text-align:left
+}
+
 .title{
   box-shadow: 0 0 0.5vw #03e6e9;
-  margin: 2px;
+  margin: 3px;
   background: #042040;
   text-align: center;
+  vertical-align: middle;
 }
 
 .title:before {
@@ -102,7 +107,6 @@ div.k{
       height: 4px;
       width: 80%;
       background-color: #00CDE6;
-
   }
 
   .title:after {
@@ -115,7 +119,6 @@ div.k{
     height: 4px;
     width: 50%;
     background-color: #00CDE6;
-
 }
 
 #Title{
@@ -123,10 +126,11 @@ div.k{
   font: 30pt "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 1vh;
-  left: 30vw;  
-  width: 40vw;  
+  left: 29vw;  
+  width: 42vw;  
   height: 7vh;  
   color: white;
+  line-height: 7vh; 
   }
 
 #Map{
@@ -134,11 +138,12 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 10vh;
-  left: 25vw;  
-  width: 50vw;   
+  left: 24vw;  
+  width: 52vw;   
   height: 62vh;  
   color: "#008acd";
-
+  background-image:url("../images/map.png");
+  background-size:cover;
   }
 
 #Economy{
@@ -146,8 +151,8 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 73vh;
-  left: 25vw;  
-  width: 50vw;   
+  left: 24vw;  
+  width: 52vw;   
   height: 25vh;  
   color: white;
 
@@ -158,8 +163,8 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 1vh;
-  left: 76vw;  
-  width: 22vw;  
+  left: 76.5vw;  
+  width: 22.5vw;  
   height: 5vh;  
  }
 
@@ -168,8 +173,8 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 7vh;
-  left: 76vw;  
-  width: 22vw;  
+  left: 76.5vw;  
+  width: 22.5vw;  
   height: 32vh;  
   color: white;
 
@@ -180,8 +185,8 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 40vh;
-  left: 76vw;  
-  width: 22vw;  
+  left: 76.5vw;  
+  width: 22.5vw;  
   height: 32vh;  
   color: white;
 
@@ -192,8 +197,8 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 73vh;
-  left: 76vw;   
-  width: 22vw;   
+  left: 76.5vw;   
+  width: 22.5vw;   
   height: 25vh;  
   color: white;
 }
@@ -209,7 +214,7 @@ div.k{
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
   top: 1vh;
-  left: 1vw;
+  left: 0.5vw;
   width: 23vw;  
   height: 35vh;  
   color: white;

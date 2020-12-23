@@ -11,6 +11,42 @@ var  getOverData = function() {
   return stmt.all(); 
 }
 
+const ProvinceDataTm = [
+  {name: '西藏自治区', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0}, 
+  {name: '甘肃省', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0},       
+  {name: '上海市', confirmedCount: 25, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '福建省', confirmedCount: 29, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '广西壮族自治区', confirmedCount: 37, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '广东省', confirmedCount: 38, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '河北省', confirmedCount: 39, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '云南省', confirmedCount: 39, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '海南省', confirmedCount: 44, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '辽宁省', confirmedCount: 50, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '吉林省', confirmedCount: 51, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '宁夏回族自治区', confirmedCount: 52, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '江西省', confirmedCount: 54, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '青海省', confirmedCount: 57, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '内蒙古自治区', confirmedCount: 58, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '四川省', confirmedCount: 58, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '黑龙江省', confirmedCount: 61, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '重庆市', confirmedCount: 66, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '安徽省', confirmedCount: 67, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '贵州省', confirmedCount: 71, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '北京市', confirmedCount: 79, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '新疆维吾尔自治区', confirmedCount: 84, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '浙江省', confirmedCount: 84, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '山东省', confirmedCount: 92, curedCount:0, deadCount:0, currentConfirmedCount:0},     
+  {name: '江苏省', confirmedCount: 99, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '天津市', confirmedCount: 105, curedCount:0, deadCount:0, currentConfirmedCount:0},    
+  {name: '河南省', confirmedCount: 113, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '山西省', confirmedCount: 114, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '陕西省', confirmedCount: 147, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '湖南省', confirmedCount: 175, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '湖北省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '台湾省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '香港', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
+  {name: '澳门', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
+ ];
 // 查询各省病例
 const provinceCaseStmt = database.prepare('SELECT * FROM ProvinceCase Where Province = ? and updateTime = ?');
 
@@ -89,48 +125,13 @@ router.get("/Province", function (req, res, next) {
 });
 
 router.post("/ProvinceCase", function (req, res, next) {
-    var data = [
-     {name: '西藏自治区', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0}, 
-     {name: '甘肃省', confirmedCount: 24, curedCount:0, deadCount:0, currentConfirmedCount:0},       
-     {name: '上海市', confirmedCount: 25, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '福建省', confirmedCount: 29, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '广西壮族自治区', confirmedCount: 37, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '广东省', confirmedCount: 38, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '河北省', confirmedCount: 39, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '云南省', confirmedCount: 39, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '海南省', confirmedCount: 44, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '辽宁省', confirmedCount: 50, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '吉林省', confirmedCount: 51, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '宁夏回族自治区', confirmedCount: 52, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '江西省', confirmedCount: 54, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '青海省', confirmedCount: 57, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '内蒙古自治区', confirmedCount: 58, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '四川省', confirmedCount: 58, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '黑龙江省', confirmedCount: 61, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '重庆市', confirmedCount: 66, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '安徽省', confirmedCount: 67, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '贵州省', confirmedCount: 71, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '北京市', confirmedCount: 79, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '新疆维吾尔自治区', confirmedCount: 84, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '浙江省', confirmedCount: 84, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '山东省', confirmedCount: 92, curedCount:0, deadCount:0, currentConfirmedCount:0},     
-     {name: '江苏省', confirmedCount: 99, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '天津市', confirmedCount: 105, curedCount:0, deadCount:0, currentConfirmedCount:0},    
-     {name: '河南省', confirmedCount: 113, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '山西省', confirmedCount: 114, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '陕西省', confirmedCount: 147, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '湖南省', confirmedCount: 175, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '湖北省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
-     {name: '台湾省', confirmedCount: 273, curedCount:0, deadCount:0, currentConfirmedCount:0},
-    ];
-
-    
-    for(var i = 0; i < data.length; i++)
+        
+    for(var i = 0; i < ProvinceDataTm.length; i++)
     {
       var resault;
-      var date;
-      var month = Number(req.body.Date.month);
-      var day = Number(req.body.Date.day) + 1;
+      var date = new Date(req.body.Date);
+      var month = Number(date.getMonth()) + 1;
+      var day = Number(date.getDate()) + 1;
       do{
         if(day-- <= 0)
         {
@@ -147,21 +148,21 @@ router.post("/ProvinceCase", function (req, res, next) {
         }
         else
         {
-          date = req.body.Date.year + '/' + String(month) + '/' + String(day);
-          resault = provinceCaseStmt.all(data[i].name, date);
+          date = 2020 + '/' + String(month) + '/' + String(day);
+          resault = provinceCaseStmt.all(ProvinceDataTm[i].name, date);
         }
 
       }while(resault.length == 0)
 
       if(resault.length)
       {
-          data[i].confirmedCount = resault[0].confirmedCount;
-          data[i].curedCount = resault[0].curedCount;
-          data[i].deadCount = resault[0].deadCount;
-          data[i].currentConfirmedCount = resault[0].confirmedCount - resault[0].curedCount - resault[0].deadCount;
+        ProvinceDataTm[i].confirmedCount = resault[0].confirmedCount;
+        ProvinceDataTm[i].curedCount = resault[0].curedCount;
+        ProvinceDataTm[i].deadCount = resault[0].deadCount;
+        ProvinceDataTm[i].currentConfirmedCount = resault[0].CurCount;
       }
     }
-  res.json(data);
+  res.json(ProvinceDataTm);
 });
 
 router.post("/GetCPIData", function (req, res, next){  
