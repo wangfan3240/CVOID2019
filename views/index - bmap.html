@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" />
+    <title>新冠疫情次生灾害的可视化分析</title>
+    <script src="javascripts/echarts.js"></script>
+    <script src="javascripts/echarts-wordcloud.min.js"></script>    
+    <script src="javascripts/theme/macarons.js"></script>
+    <script src="javascripts/china.js"></script>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css"> 
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script> 
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script> 
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>    
+    <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=nTbnbAdkvFSIiKz2IgGRjbGeRxlfuybI"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@4/dist/extension/bmap.min.js"></script>
+  </head>
+  <body>
+    <div id="Statistics">
+        <br>全国感染统计</br>
+      <div id="Count">91006</div>
+      <div id="EChart"></div>
+    </div>
+    // 大事记
+    <div id="BigEvent" class="container">
+        <h3>疫情大事记-2020</h3>
+        <table class="table">            
+            <tbody>                
+              <tr class="table-primary">
+                <td>2020-11-9</td>                
+                <td>以色列将中国列入入境无需隔离的“绿色”国家</td>
+              </tr>
+              <tr class="table-success">
+                <td>2020-11-8</td>                
+                <td>香港新增23例确诊病例 累计确诊5431例</td>
+              </tr>
+              <tr class="table-danger">
+                <td>2020-11-7</td>                
+                <td>陕西11日新增2例境外输入确诊病例</td>
+              </tr>
+              <tr class="table-info">
+                <td>2020-11-2</td>                
+                <td>福建省新型冠状病毒肺炎疫情情况</td>
+              </tr>
+              <tr class="table-warning">
+                <td>2020-10-9</td>                
+                <td>内蒙古新增1例境外输入新冠肺炎确诊病例</td>
+              </tr>              
+              </tr>
+              <tr class="table-secondary">
+                <td>2020-10-2</td>                
+                <td>世卫组织：全球新冠肺炎确诊病例超过4910万例</td>
+              </tr>
+              <tr class="table-light">
+                <td>2020-10-1</td>                
+                <td>广东省2日新增8例境外输入确诊病例</td>
+              </tr>
+              <tr class="table-dark text-dark">
+                <td>2020-9-20</td>                
+                <td>香港新增6例新冠肺炎确诊病例</td>
+              </tr>
+              <tr class="table-primary">
+                <td>2020-9-20</td>                
+                <td>习近平向波兰总统杜达致慰问电</td>
+              </tr>
+              <tr class="table-primary">
+                <td>2020-9-19</td>                
+                <td>福建新增6例境外输入无症状感染者</td>
+              </tr>
+              <tr class="table-primary">
+                <td>2020-9-18</td>                
+                <td>世卫组织：全球新冠肺炎新增242189例</td>
+              </tr>
+              <tr class="table-primary">
+                <td>2020-9-18</td>                
+                <td>​河南省新增1例境外输入无症状感染者</td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+    <div id="Title" class="title">新冠疫情次生灾害的可视化分析</div>
+    </div>
+    <div id="Map">疫情地图</div>
+    <div id="Economy">经济影响分析</div>
+    <div id="Time">2020年11月22日</div>
+    <div id="Goods">物资需求与供应</div>
+    <div id="RadarMap">衣食住行精神需求分析</div>
+    <div id="WordCloud">情绪词云图</div>
+  </body>
+
+  <!--疫情统计-->
+  <script type="text/javascript">
+    $.ajax({
+        type: "get",
+        async: true,            
+        url: "/database/GetOverView",   
+        dataType: "json",       
+        success: function (results) {            
+            CreateStatChart(results);
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
+
+    var GetOverData = function(data, type)
+    {
+        var res = [];
+        if(type == 0)
+        {
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].updateTime;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        else if(type == 1)
+        {
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].currentConfirmedCount;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        else if(type == 2)
+        {
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].confirmedCount;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        else if(type == 3)
+        {
+            for (var i = data.length-1; i >= 0; i--) {
+            var r = data[i].deadCount;
+            if (r) {
+                res.push(r);
+                }
+            }
+        }
+        return res;
+    }
+
+    function CreateStatChart(results)
+    {
+        var StatChart = echarts.init(document.getElementById("Statistics"), 'macarons');
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: "感染统计(万)",
+                textStyle: {
+                fontSize: 20, 
+                },
+                },
+            grid:{
+                x:0,
+                y:100,
+                x2:10,
+                y2:0,
+                borderWidth:1,
+                containLabel:true
+            },
+            tooltip: {},
+            legend: {
+                data: ['现存感染数量', '累计感染数量', '死亡感染数量'],
+                textStyle: {
+                },                
+            },
+            xAxis: {
+                data: GetOverData(results, 0),
+                axisLine: {
+                    lineStyle: {           
+                    fontSize : 10,
+                    },
+                },
+                axisTick: {
+                    show: false
+                    },
+            },
+            yAxis: {
+                axisLine: {
+                    lineStyle: {
+                    fontSize : 10,
+                    },
+                },
+
+                axisTick: {
+                    show: false
+                },
+            },
+            series: [
+                {
+                name: "现存感染数量",
+                type: "line",
+                data: GetOverData(results, 1),        
+                },
+                {
+                name: "累计感染数量",
+                type: "line",
+                data: GetOverData(results, 2),         
+                },
+                {
+                name: "死亡感染数量",
+                type: "line",
+                data: GetOverData(results, 3),         
+                },
+            ],  
+                      
+            };
+
+        StatChart.setOption(option);
+    }
+  </script>
+
+  <!--地图-->
+  <script type="text/javascript">
+
+var convertData = function (data, geo) 
+{
+    var res = [];
+    
+    for (var i = 0; i < data.length; i++) 
+    {
+        var geoCoord = geo[data[i].name];
+        if (geoCoord) {
+            res.push({
+                name: data[i].name,
+                value: [geoCoord[0], geoCoord[1], data[i].confirmedCount, data[i].curedCount,data[i].deadCount,data[i].currentConfirmedCount]
+            });
+        }
+    }
+    return res;
+};
+
+var data1;
+
+$.ajax({
+        type: "get",
+        async: true,            
+        url: "/database/ProvinceCase",   
+        dataType: "json",       
+        success: function (results) {            
+              data1 = results;
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
+
+$.ajax({
+        type: "get",
+        async: true,            
+        url: "/database/Province",   
+        dataType: "json",       
+        success: function (results) {            
+              generateChart(results);
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("图表请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
+
+function generateChart(results)
+{
+    var dom = document.getElementById("Map", 'macarons');
+    var myChart = echarts.init(dom);
+    option = null;
+
+    option = {
+    title: {
+        x: "center",
+        text: '全国疫情现存病例',
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    tooltip : {
+        x: "left",
+        trigger: 'item',
+        formatter: function (params) {   //  params是数组array里每个项
+            return "累计：" + params.value[2] + "<br/>治愈：" + params.value[3] + "<br>死亡：" + params.value[4] + "<br/>现存：" + params.value[5] + "<br/>"
+        }
+        
+    },
+    bmap: {
+        center: [104.114129, 37.550339],
+        zoom: 5,
+        roam: true,
+        mapStyle: {
+            
+        }
+    },
+    series : [       
+        {
+            name: '疫情统计',
+            type: 'effectScatter',
+            coordinateSystem: 'bmap',
+            data: convertData(data1, results),
+            symbolSize: function (val) {
+                var size =  val[5];
+                if(size > 50)
+                size = 50;
+                return size;
+            },
+            encode: {
+                value: 2
+            },
+            showEffectOn: 'render',
+            rippleEffect: {
+                brushType: 'stroke'
+            },
+            hoverAnimation: true,
+            label: {
+                formatter: '{b}',
+                position: 'bottom',
+                show: true,
+                textStyle: {
+                    fontSize: 10,
+                    fontWeight: 'bolder' ,
+                    color: '#ffffff' // 主标题文字颜色
+                    },
+            },
+            itemStyle: {
+                color: '#E6805A',
+                shadowBlur: 10,
+                shadowColor: '#333',
+            },            
+            zlevel: 1
+        }
+    ]    
+};;
+
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+
+        var map = myChart.getModel().getComponent('bmap').getBMap();
+        map.setMapStyleV2({     
+    styleId: '6c2752ae8697adc9bdcad96d74fcaaeb'
+    });
+    }   
+
+    myChart.on("click",function (e) {
+     console.log(e)    //  每个标识点的信息
+    })
+}
+  
+  </script>
+
+  <!--雷达图-->
+  <script type="text/javascript">
+    var g_Month = 10;
+    $.ajax({
+        type: 'POST',
+        async: true,            
+        url: "/database/GetCPIData",
+        data: {'Month':g_Month},
+        dataType: "json",       
+        success: function (results) {            
+              CreateRader(results);
+        },
+        error: function (errorMsg) {
+            //请求失败时执行该函数
+            alert("GetCPI请求数据失败!");
+            myChart.hideLoading();
+        }
+    })
+
+    var GetCPIData = function(results, year)
+    {
+        var data = [];
+        for(var i = 0; i < results.length; i++)
+        {
+            if(year == results[i][0])
+            {
+                for(var j = 1; j < results[i].length; j++)
+                {
+                    data.push(results[i][j]);
+                }
+            }
+        }
+        return data;
+    }
+
+    function CreateRader(results)
+    {
+        var RadarChart = echarts.init(document.getElementById("RadarMap"), 'macarons');
+
+        option = {
+        title: {
+            text: '生活影响',       
+        },
+        tooltip: {},
+        legend: {
+            data: ['2018年','2019年', '2020年'],       
+        },
+        radar: {
+            // shape: 'circle',
+            name: {
+                textStyle: {              
+                    borderRadius: 5,
+                    padding: [1, 1]
+                }
+            },
+            indicator: [
+                { name: '衣着', max: results.max, min:results.min},
+                { name: '食品', max: results.max, min:results.min}, 
+                { name: '住房', max: results.max, min:results.min},
+                { name: '交通', max: results.max, min:results.min},
+                { name: '医疗', max: results.max, min:results.min},
+                { name: '教育', max: results.max, min:results.min},
+                { name: '生活', max: results.max, min:results.min},
+                { name: '服务', max: results.max, min:results.min},
+            ],
+            center:['50%', '55%'],
+            radius:'65%',
+        
+        },
+        series: [{
+            name: '生活影响',
+            type: 'radar',
+            // areaStyle: {normal: {}},
+            data: [
+                {
+                    value: GetCPIData(results.value, 2018),
+                    name: '2018年',
+                
+                },
+                {
+                    value: GetCPIData(results.value, 2019),
+                    name: '2019年',
+                
+                },
+                {
+                    value: GetCPIData(results.value, 2020),
+                    name: '2020年',                    
+                }
+                ]
+            }]
+        };
+
+// 使用刚指定的配置项和数据显示图表。
+    RadarChart.setOption(option);
+    }
+    
+  </script>
+ 
+  <!--词云-->
+  <script>
+      onload = function () {
+            var data = {
+                value: [{
+                    "name": "武汉加油",
+                    "value": 1446
+                },
+                    {
+                        "name": "疫苗",
+                        "value": 928
+                    },
+                    {
+                        "name": "口罩",
+                        "value": 906
+                    },
+                    {
+                        "name": "消毒水",
+                        "value": 825
+                    },
+                    {
+                        "name": "猪肉",
+                        "value": 514
+                    },
+                    {
+                        "name": "封城",
+                        "value": 486
+                    },
+                    {
+                        "name": "英雄",
+                        "value": 53
+                    },
+                    
+                    {
+                        "name": "死亡率",
+                        "value": 104
+                    },
+                    {
+                        "name": "本地周边游",
+                        "value": 3
+                    },
+                    {
+                        "name": "社区感染",
+                        "value": 1331
+                    },
+                    {
+                        "name": "开学",
+                        "value": 941
+                    },
+                    {
+                        "name": "意大利",
+                        "value": 585
+                    },
+                    {
+                        "name": "双黄莲",
+                        "value": 473
+                    },
+                    {
+                        "name": "雷神山",
+                        "value": 358
+                    },
+                    {
+                        "name": "留学",
+                        "value": 246
+                    },
+                    {
+                        "name": "出国",
+                        "value": 207
+                    },
+                    {
+                        "name": "工资",
+                        "value": 194
+                    },
+                    {
+                        "name": "技能培训",
+                        "value": 104
+                    },
+                   
+                    {
+                        "name": "复工复产",
+                        "value": 30
+                    },
+                    {
+                        "name": "典当",
+                        "value": 7
+                    },
+                    {
+                        "name": "海外置业",
+                        "value": 1
+                    },
+                    {
+                        "name": "武汉加油",
+                        "value": 1309
+                    },
+                    {
+                        "name": "涨价",
+                        "value": 965
+                    },
+                    {
+                        "name": "水果",
+                        "value": 900
+                    },
+                    {
+                        "name": "汽车车型",
+                        "value": 727
+                    },
+                    {
+                        "name": "购车阶段",
+                        "value": 461
+                    },
+                    {
+                        "name": "算命",
+                        "value": 303
+                    },
+                    {
+                        "name": "解梦",
+                        "value": 196
+                    },
+                    {
+                        "name": "风水",
+                        "value": 93
+                    },
+                    {
+                        "name": "面相分析",
+                        "value": 47
+                    },
+                    {
+                        "name": "手相",
+                        "value": 32
+                    },
+                    {
+                        "name": "公益",
+                        "value": 90
+                    }
+                ],
+            }
+            
+            var myChart = echarts.init(document.getElementById('WordCloud'), 'macarons');
+            //温馨提示：image 选取有严格要求不可过大；，否则firefox不兼容  iconfont上面的图标可以
+            var maskImage = new Image();
+            maskImage.src = 'world.png';
+ 
+            maskImage.onload = function(){
+                myChart.setOption( {
+                   
+                    tooltip: {
+                        show: false
+                    },
+                    series: [{
+                        type: 'wordCloud',
+                        gridSize: 10,
+                        sizeRange: [5, 100],
+                        rotationRange: [-45, 0, 45, 90],
+                        shape: 'circle',
+                        maskImage: maskImage,
+                        textStyle: {
+                            normal: {
+                                color: function() {
+                                    return 'rgb(' +
+                                            Math.round(Math.random() * 255) +
+                                            ', ' + Math.round(Math.random() * 255) +
+                                            ', ' + Math.round(Math.random() * 255) + ')'
+                                }
+                            }
+                        },
+                        left: 'center',
+                        top: 'center',
+                        // width: '96%',
+                        // height: '100%',
+                        right: null,
+                        bottom: null,
+                        // width: 300,
+                        // height: 200,
+                        // top: 20,
+                        data: data.value
+                    }]
+                })
+            } 
+        }
+  </script>
+
+  <!--柱状图-->
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var GoodsChart = echarts.init(document.getElementById("Goods"), 'macarons');
+
+    option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    legend: {
+        data: ['医疗物资', '主粮', '蔬菜', '肉类', '生活用品']
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis: {
+        type: 'value',
+        axisLine:{
+            lineStyle:{
+    
+            }
+        }
+    },
+    yAxis: {
+        type: 'category',
+        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月'],
+        axisLine:{
+            lineStyle:{
+  
+            }
+        }
+    },
+    series: [
+        {
+            name: '医疗物资',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                show: true,
+                position: 'insideRight'
+            },
+            data: [1320, 1302, 1301, 1034, 990, 530, 320, 390, 330, 320]
+        },
+        {
+            name: '主粮',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                show: true,
+                position: 'insideRight'
+            },
+            data: [120, 132, 101, 134, 90, 230, 210, 390, 330, 320]
+        },
+        {
+            name: '蔬菜',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                show: true,
+                position: 'insideRight'
+            },
+            data: [220, 182, 191, 234, 290, 330, 310, 390, 330, 320]
+        },
+        {
+            name: '肉类',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                show: true,
+                position: 'insideRight'
+            },
+            data: [150, 212, 201, 154, 190, 330, 410, 390, 330, 320]
+        },
+        {
+            name: '生活用品',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                show: true,
+                position: 'insideRight'
+            },
+            data: [820, 832, 901, 934, 690, 530, 520, 390, 330, 320]
+        }
+    ]
+};
+
+    // 使用刚指定的配置项和数据显示图表。
+    GoodsChart.setOption(option);
+  </script>
+
+  <!--折线图--> 
+  <script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var EconomyChart = echarts.init(document.getElementById("Economy"), 'macarons');
+
+    option = {
+    title: {
+        text: '年度经济增长',       
+    },
+    grid:{
+        x:0,
+        y:50,
+        x2:20,
+        y2:0,
+        borderWidth:1,
+        containLabel:true
+      },
+    tooltip: {
+        trigger: 'axis'
+    },
+    legend: {
+        data: ['2018年', '2019年', '2020年'],
+        textStyle:{
+     
+        }
+    },
+    toolbox: {
+        feature: {
+            saveAsImage: {}
+        }
+    },
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月','8月', '9月','10月', '11月', '12月'],
+        axisLine: {
+          lineStyle: {            
+            fontSize : 10,
+          },
+        },
+        axisTick: {
+         show: false
+        },
+    },
+    yAxis: {
+        type: 'value',
+        axisLine: {
+          lineStyle: {
+            fontSize : 10,
+          },
+        },
+        axisTick: {
+         show: false
+        },
+    },
+    series: [
+        {
+            name: '2018年',
+            type: 'line',
+            stack: '总量',
+            data: [120, 132, 101, 134, 90, 230, 210],
+           
+        },
+        {
+            name: '2019年',
+            type: 'line',
+            stack: '总量',
+            data: [220, 182, 191, 234, 290, 330, 310],
+          
+        },
+        {
+            name: '2020年',
+            type: 'line',
+            stack: '总量',
+            data: [150, 232, 201, 154, 190, 330, 410],
+           
+        }
+    ]
+};
+
+    // 使用刚指定的配置项和数据显示图表。
+    EconomyChart.setOption(option);
+  </script>
+</html>

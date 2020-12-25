@@ -20,9 +20,10 @@
     </div>
     <div id="BigEvent" class = "k">
         <div id="EventTitle" >疫情大事记-2020</div>
-        <table id="News">   
-                     
+        <div style="margin-left: 10px;margin-right: 10px">
+        <table id="News" >
         </table>
+        </div>
     </div>
 
     <div id="Title" class="title">新冠疫情次生灾害的可视化分析</div>
@@ -216,55 +217,61 @@
     function LoadNewInfo(data)
     {
         $(document).ready(function() {
-            
-            $('#News').dataTable( {
-                language: {
-                    "sProcessing":   "处理中...",
-                    "buttons.copy":   "复制",
-                    "buttons.print":   "打印",
-                    "sLengthMenu":   "显示 _MENU_ 项结果。",
-                    "sZeroRecords":  "没有匹配结果",
-                    "sInfo":         "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
-                    "sInfoEmpty":    "显示第 0 至 0 项结果，共 0 项",
-                    "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
-                    "sInfoPostFix":  "",
-                    "sSearch":       "搜索:",
-                    "sUrl":          "",
-                    "sEmptyTable":     "表中数据为空",
-                    "sLoadingRecords": "载入中...",
-                    "sInfoThousands":  ",",
-                    "oPaginate": {
-                        "sFirst":    "首页",
-                        "sPrevious": "上页",
-                        "sNext":     "下页",
-                        "sLast":     "末页"
-                    },
-                    "oAria": {
-                        "sSortAscending":  ": 以升序排列此列",
-                        "sSortDescending": ": 以降序排列此列"
-                    }
-                },
-                bLengthChange: false,
-                paging: true,//分页
-                ordering: true,//是否启用排序
-                searching: false,//搜索   
-                bAutoWidth: true, //自适应宽度
-                bPaginate: false,
-                bInfo: false, 
-                bAutoHeight:true,
-                iDisplayLength: 20,
-                sScrollY:'calc(100vh - 54vh)', 
-                data: data,
-                columns: [                
-                    { "title": "" },                
-                    ],
-                createdRow: function ( row, data, index ) {
-                    $('td', row).css('font-weight',"normal").css("color","#ffffff");
-                    $('td', row).css('font-weight',"normal").css("background","rgba(255,255,255,0.1)");
-                },
-            });
-        }); 
-    };
+
+          $('#News').dataTable({
+            // Disable scrolling in Head
+            language: {
+              "sProcessing": "处理中...",
+              "buttons.copy": "复制",
+              "buttons.print": "打印",
+              "sLengthMenu": "显示 _MENU_ 项结果。",
+              "sZeroRecords": "没有匹配结果",
+              "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+              "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+              "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+              "sInfoPostFix": "",
+              "sSearch": "搜索:",
+              "sUrl": "",
+              "sEmptyTable": "表中数据为空",
+              "sLoadingRecords": "载入中...",
+              "sInfoThousands": ",",
+              "oPaginate": {
+                "sFirst": "首页",
+                "sPrevious": "  &nbsp;&nbsp;上页",
+                "sNext": "下页  &nbsp;&nbsp;",
+                "sLast": "末页"
+              },
+              "oAria": {
+                "sSortAscending": ": 以升序排列此列",
+                "sSortDescending": ": 以降序排列此列"
+              }
+            },
+            bDeferRender:true,
+            bLengthChange: false,
+            paging: true,//分页
+            ordering: false,//是否启用排序
+            searching: false,//搜索
+            bAutoWidth: false, //自适应宽度
+            bPaginate: false,
+            bInfo: false,
+            serverSide: false,
+            bAutoHeight: false,
+            iDisplayLength: 7,
+            sScrollY: '',
+
+            columns: [
+              {"title": ""},
+            ],
+            createdRow: function (row, data, index) {
+              $('td', row).css('font-weight', "normal").css("color", "#ffffff");
+              $('td', row).css('font-weight', "normal").css("background", "rgba(255,255,255,0.1)");
+              $('td', row).css('height', "38px");
+              $('td', row).css('padding', "5px");
+            },
+            data: data,
+          })
+        })
+    }
 
     function ProvinceChanged(province)
     {
@@ -308,7 +315,8 @@
             url: "/database/GetNews",   
             data: {'Date':date},
             dataType: "json",       
-            success: function (results) {            
+            success: function (results) {
+
                 LoadNewInfo(results);
             },
             error: function (errorMsg) {                
