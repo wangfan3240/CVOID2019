@@ -168,26 +168,28 @@
                     {              
                         for(var j = 0; j < 12; j++)  
                         {
-                            g_ProvinceCase[j].sort(function sortNumber(a,b){return a.value[5] - b.value[5]});
+                            g_ProvinceCase[j].sort(function sortNumber(b,a){return a.value[5] - b.value[5]});
                             g_ProvinceBar.push([]);
                             g_ProvinceCate.push([]);     
                             for(var n = 0; n < g_ProvinceCase[j].length; n++)
                             {
                                 g_ProvinceBar[j].push(g_ProvinceCase[j][n].value[5]);
-                              function g(a){
-                                var temp1 = /自治区/i;
-                                var temp2 = /.族自治区/i;
-                                if (a.search(temp2)!==-1) {
-                                  return a.replace(temp2, '')+'省'
-                                }
+                              function g(a){                                
                                 if (a==='西藏自治区')
-                                  return '西藏省';
+                                  return '西藏';
                                 if (a==='新疆维吾尔自治区')
-                                  return '新疆省';
-                                if (a.search(temp1)!==-1) {
-                                  return a.replace(temp1, '')
-                                }
-                                return a
+                                  return '新疆';
+                                if (a==='内蒙古自治区')
+                                  return '内蒙古';
+                                if (a==='宁夏回族自治区')
+                                  return '宁夏';
+                                if (a==='广西壮族自治区')
+                                  return '广西';
+
+                                if(a.length>2)
+                                    return a.substring(0, a.length - 1);                                
+                                
+                                return a;
                               }
                                 g_ProvinceCate[j].push(g(g_ProvinceCase[j][n].name))
                             }
@@ -271,7 +273,7 @@
             bInfo: false,
             serverSide: false,
             bAutoHeight: false,
-            iDisplayLength: 7,
+            iDisplayLength: calcDataTableHeight(),
             sScrollY: '',
 
             columns: [
@@ -287,6 +289,10 @@
           })
         })
     }
+
+    var calcDataTableHeight = function() {
+        return Math.floor(($(window).height() * 0.50 - 70) / 43);
+    };
 
     function ProvinceChanged(province)
     {
@@ -880,10 +886,9 @@
                         }
                     },
 
-                    data: g_ProvinceCate[i].slice(-20,-1)
+                    data: g_ProvinceCate[i].slice(0, 20).reverse()
 
                 },
-
             
             series : [ 
             {
@@ -981,7 +986,7 @@
                                 barBorderRadius: [0, 30, 30, 0]
                             }
                         },
-                        data:g_ProvinceBar[i].slice(-20,-1)
+                        data:g_ProvinceBar[i].slice(0, 20).reverse()
                     }
             ]    
             }
