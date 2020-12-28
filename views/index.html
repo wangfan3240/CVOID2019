@@ -168,13 +168,28 @@
                     {              
                         for(var j = 0; j < 12; j++)  
                         {
-                          //  g_ProvinceCase[i].sort(function sortNumber(a,b){return a.value[5] - b.value[5]});
+                            g_ProvinceCase[j].sort(function sortNumber(a,b){return a.value[5] - b.value[5]});
                             g_ProvinceBar.push([]);
                             g_ProvinceCate.push([]);     
                             for(var n = 0; n < g_ProvinceCase[j].length; n++)
                             {
                                 g_ProvinceBar[j].push(g_ProvinceCase[j][n].value[5]);
-                                g_ProvinceCate[j].push(g_ProvinceCase[j][n].name);
+                              function g(a){
+                                var temp1 = /自治区/i;
+                                var temp2 = /.族自治区/i;
+                                if (a.search(temp2)!==-1) {
+                                  return a.replace(temp2, '')+'省'
+                                }
+                                if (a==='西藏自治区')
+                                  return '西藏省';
+                                if (a==='新疆维吾尔自治区')
+                                  return '新疆省';
+                                if (a.search(temp1)!==-1) {
+                                  return a.replace(temp1, '')
+                                }
+                                return a
+                              }
+                                g_ProvinceCate[j].push(g(g_ProvinceCase[j][n].name))
                             }
                         }       
                         
@@ -541,10 +556,7 @@
                     showSymbol: false,
                     lineStyle: {
                         width: 2,
-                        color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
-                                offset: 0,
-                                color: '#9effff'
-                            },
+                        color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                             {
                                 offset: 1,
                                 color: '#9E87FF'
@@ -584,10 +596,7 @@
                     showSymbol: false,
                     lineStyle: {
                         width: 2,
-                        color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
-                                offset: 0,
-                                color: '#73DD39'
-                            },
+                        color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
                             {
                                 offset: 1,
                                 color: '#73DDFF'
@@ -630,10 +639,6 @@
                         color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
                                 offset: 0,
                                 color: '#fe9a'
-                            },
-                            {
-                                offset: 1,
-                                color: '#fe9a8b'
                             }
                         ]),
                         //shadowColor: 'rgba(254,154,139, 0.3)',
@@ -825,7 +830,6 @@
                     fontSize: 20,
                 }
             },
-           
             xAxis: {
                     type: 'value',
                     scale: true,
@@ -839,8 +843,10 @@
                         show: false
                     },
                     axisTick: {
-                        show: false
+                        show: false,
+                      length: 3,
                     },
+
                     axisLabel: {
                         margin: 1,
                         textStyle: {
@@ -850,6 +856,8 @@
                     },
                 },
                 yAxis: {
+                  x:'50%',
+                  position: 'left',
                     type: 'category',
                     //  name: 'TOP 20',
                     nameGap: 16,
@@ -871,8 +879,11 @@
                             color: '#ddd'
                         }
                     },
-                    data: g_ProvinceCate[i]
+
+                    data: g_ProvinceCate[i].slice(-20,-1)
+
                 },
+
             
             series : [ 
             {
@@ -970,7 +981,7 @@
                                 barBorderRadius: [0, 30, 30, 0]
                             }
                         },
-                        data:g_ProvinceBar[i]
+                        data:g_ProvinceBar[i].slice(-20,-1)
                     }
             ]    
             }
@@ -1029,6 +1040,7 @@
           y:20
         },
         tooltip: {},
+          color:['#9E87FF','#33CC00','#FF0000'],
         legend: {
             data: YearList,
           y:15,
@@ -1051,7 +1063,7 @@
                 { name: '医疗', max: results.max, min:results.min},                
             ],
             center:['50%', '60%'],
-            radius:'65%',
+            radius:'75%',
         
         },
         series: [{
