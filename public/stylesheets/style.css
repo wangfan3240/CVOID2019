@@ -58,7 +58,7 @@ div.k{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 1vh;
+  top: 0.5vh;
   left: 0.5vw;
   width: 23vw;  
   height: 40vh;  
@@ -69,10 +69,10 @@ div.k{
   text-align:center;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 42vh;
+  top: 41.5vh;
   left: 0.5vw;  
   width: 23vw;  
-  height: 56vh;  
+  height: 56.5vh;  
   color: white;
   font-weight:bold;
 }
@@ -139,7 +139,7 @@ table{
   text-align:center;
   font: 30pt "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 1vh;
+  top: 0.5vh;
   left: 29vw;  
   width: 42vw;  
   height: 7vh;  
@@ -151,10 +151,10 @@ table{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 10vh;
+  top: 9.5vh;
   left: 24vw;  
   width: 52vw;   
-  height: 62vh;  
+  height: 62.5vh;  
   color: "#008acd";
   background-image:url("../images/map.png");
   background-size:cover;
@@ -176,20 +176,20 @@ table{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 1vh;
+  top: 0.5vh;
   left: 76.5vw;  
   width: 22.5vw;  
-  height: 5vh;  
+  height: 4vh;  
  }
 
 #Goods{
   text-align:center;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   position: absolute;
-  top: 7vh;
+  top: 5vh;
   left: 76.5vw;  
   width: 22.5vw;  
-  height: 32vh;  
+  height: 34vh;  
   color: white;
 
   }
