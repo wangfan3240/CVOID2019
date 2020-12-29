@@ -281,6 +281,8 @@ router.post("/GetWordCloud", function (req, res, next){
   res.json(resault);  
 });
 
+
+
 router.post("/GetNews", function (req, res, next){  
 
   var Date = req.body.Date.month + '月' + req.body.Date.day +'日';
@@ -289,11 +291,12 @@ router.post("/GetNews", function (req, res, next){
   var data = [];
   for(var i = 0; i < resault.length; i++)
   {
-    var news = [];
-    //news.push(resault[i].Date);
-    //news.push(resault[i].title);
-    news.push(resault[i].Date + ':' + resault[i].title);
-    data.push(news);
+    if(resault[i].title.search('[1-9]\d*例')==-1)
+    {
+      var news = [];    
+      news.push(resault[i].Date + ':' + resault[i].title);
+      data.push(news);
+    }    
   }
   res.json(data);  
 });
