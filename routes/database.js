@@ -266,6 +266,7 @@ router.post("/GetProvinceGDP", function (req, res, next){
     for(var i = 0; i < 3; i++)
     {
       data.value1[usesize - 3 + i] = data.value[usesize - 7 + i] * (data.value[usesize - 7 + i] / data.value[usesize - 11 + i]);
+      data.value1[usesize - 3 + i] = data.value1[usesize - 3 + i].toFixed(2);
     }
   }
 
