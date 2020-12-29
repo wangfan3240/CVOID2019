@@ -255,7 +255,8 @@ router.post("/GetProvinceGDP", function (req, res, next){
   if(resault20)
   {
     var size = resault20.length;
-    for(var i = 0; i< size; i++)
+    var usesize = 15;
+    for(var i = size-usesize; i< size; i++)
     {
         data.month.push(resault20[size - i - 1].Date);
         data.value.push(resault20[size - i - 1].Value);
@@ -264,7 +265,7 @@ router.post("/GetProvinceGDP", function (req, res, next){
 
     for(var i = 0; i < 3; i++)
     {
-      data.value1[size - 3 + i] = data.value[size - 7 + i] * (data.value[size - 7 + i] / data.value[size - 11 + i]);
+      data.value1[usesize - 3 + i] = data.value[usesize - 7 + i] * (data.value[usesize - 7 + i] / data.value[usesize - 11 + i]);
     }
   }
 

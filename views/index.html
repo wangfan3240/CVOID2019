@@ -83,6 +83,8 @@
     var g_ProvinceCase= [];
     var g_ProvinceBar = [];
     var g_ProvinceCate = [];
+    var g_Q = [];
+
     const colorList = ["#9E87FF", 
             '#73DDFF', 
             '#fe9a8b', 
@@ -150,18 +152,16 @@
     function GetPovinceCase()
     {
         for(var i = 0; i < year.length; i++)
-        {        
-           
+        {                   
             $.ajax({
                 type: "POST",
-                async: true,            
+                async: false,            
                 url: "/database/ProvinceCase",   
                 data: {'Date':year[i]},
                 dataType: "json",       
                 success: function (results) {      
                      
-                    g_ProvinceCase.push(ConvertProvinceCase(results, g_ProvinceGeo));
-                    
+                    g_ProvinceCase.push(ConvertProvinceCase(results, g_ProvinceGeo));                    
                    
                     LoadCnt++;
                     if(LoadCnt == 12)
@@ -318,13 +318,23 @@
             url: "/database/GetProvinceGDP",   
             data: {'Province':province},
             dataType: "json",       
-            success: function (results) {            
+            success: function (results) {                   
                 CreateGDPChart(results);
             },
             error: function (errorMsg) {                
                 alert("请求GDP数据失败!");
             }
         })
+    }
+
+    var QMonth = function(data){
+        var month = [];
+        for(var i = 0; i < data.size; i++)
+        {
+            str = data[i];
+            month.push(str);
+        } 
+        return month;            
     }
 
     function DateChanged(date)
